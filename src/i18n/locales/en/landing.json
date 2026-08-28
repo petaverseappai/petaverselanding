@@ -2,7 +2,7 @@
   "hero": {
     "eyebrow": "Now inviting early access",
     "title": "Every moment with your pet, in one home.",
-    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PawHub — Petaverse brings it together.",
+    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PawHub. Petaverse brings it together.",
     "ctaPrimary": "Join the waitlist",
     "ctaSecondary": "See how it works",
     "statPets": "Pet profiles managed",
@@ -12,7 +12,7 @@
   "features": {
     "eyebrow": "Everything, one app",
     "title": "One app for every side of pet parenthood",
-    "subtitle": "Petaverse brings health tracking, community, adoption and lost & found together — so you're never juggling five different apps for one pet.",
+    "subtitle": "Petaverse brings health tracking, community, adoption and lost & found together, so you're never juggling five different apps for one pet.",
     "items": [
       {
         "title": "PawCare health tracking",
@@ -43,7 +43,7 @@
   "showcase": {
     "eyebrow": "Inside the app",
     "title": "Designed to feel like home",
-    "subtitle": "A warm, uncluttered interface — built so every pet parent, not just the tech-savvy ones, feels at ease."
+    "subtitle": "A warm, uncluttered interface built so every pet parent, not just the tech-savvy ones, feels at ease."
   },
   "pawcare": {
     "eyebrow": "PawCare",
@@ -73,7 +73,7 @@
     "steps": [
       {
         "title": "Create your pet's profile",
-        "description": "Add your pet's species, breed and basics — or bring over records from your vet."
+        "description": "Add your pet's species, breed and basics, or bring over records from your vet."
       },
       {
         "title": "Set up PawCare",
@@ -88,16 +88,16 @@
   "waitlist": {
     "eyebrow": "Early access",
     "title": "Be the first to know when Petaverse launches",
-    "subtitle": "We'll send one email when the app is ready — no spam, ever.",
+    "subtitle": "We'll send one email when the app is ready. No spam, ever.",
     "emailPlaceholder": "you@email.com",
     "submit": "Join the waitlist",
     "submitting": "Joining…",
-    "success": "You're on the list — we'll be in touch soon.",
+    "success": "You're on the list. We'll be in touch soon.",
     "error": "Something went wrong. Please try again.",
     "invalidEmail": "Enter a valid email address."
   },
   "footer": {
-    "description": "Petaverse is the one home for every moment with your pet — health, community, adoption and lost & found, together.",
+    "description": "Petaverse is the one home for every moment with your pet: health, community, adoption and lost & found, together.",
     "rights": "All rights reserved."
   }
 }

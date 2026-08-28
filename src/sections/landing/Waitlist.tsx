@@ -18,7 +18,7 @@ export function Waitlist() {
   } = useForm<WaitlistFormValues>({ resolver: zodResolver(waitlistSchema) });
 
   const onSubmit = async (_values: WaitlistFormValues) => {
-    // No waitlist endpoint exists on PetsApp.Api yet — this simulates the
+    // No waitlist endpoint exists on PetsApp.Api yet; this simulates the
     // round trip so the form is real and testable before that endpoint lands.
     await new Promise((resolve) => setTimeout(resolve, 600));
     toast.success(t("waitlist.success"));
