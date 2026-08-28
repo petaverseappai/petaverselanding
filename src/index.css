@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* ── Petaverse palette ─────────────────────────────────────────────────
+     Sampled from the app's screens + color palette reference.
+  ── ──────────────────────────────────────────────────────────────────── */
+  --paw-orange:        #F2A154;
+  --paw-orange-dark:   #E2863A;
+  --paw-orange-light:  #FDECD8;
+  --paw-teal:          #14A5A6;
+  --paw-teal-dark:     #0E8788;
+  --paw-teal-light:    #DFF5F3;
+  --paw-cream:         #FBF6EF;
+  --paw-purple:        #8B5FBF;
+  --paw-coral:         #F0615F;
+  --paw-blue:          #3E7BFA;
+  --paw-green:         #3FAE58;
+
+  --background:            #FFFFFF;
+  --foreground:            #23262B;
+  --card:                  #FFFFFF;
+  --card-foreground:       #23262B;
+  --popover:               #FFFFFF;
+  --popover-foreground:    #23262B;
+  --primary:               var(--paw-orange);
+  --primary-foreground:    #FFFFFF;
+  --secondary:             var(--paw-teal);
+  --secondary-foreground:  #FFFFFF;
+  --muted:                 #F5F1EA;
+  --muted-foreground:      #75726C;
+  --accent:                var(--paw-teal-light);
+  --accent-foreground:     var(--paw-teal-dark);
+  --destructive:           var(--paw-coral);
+  --border:                #ECE3D6;
+  --input:                 #ECE3D6;
+  --ring:                  var(--paw-teal);
+  --radius:                1rem;
+}
+
+.dark {
+  --background:            #17181B;
+  --foreground:            #F4F1EA;
+  --card:                  #1F2124;
+  --card-foreground:       #F4F1EA;
+  --popover:               #1F2124;
+  --popover-foreground:    #F4F1EA;
+  --primary:               var(--paw-orange);
+  --primary-foreground:    #1A1A1A;
+  --secondary:             var(--paw-teal);
+  --secondary-foreground:  #0B1616;
+  --muted:                 #26282C;
+  --muted-foreground:      #A6A29A;
+  --accent:                #1E3A3A;
+  --accent-foreground:     #7FE0DE;
+  --destructive:           var(--paw-coral);
+  --border:                #2C2E32;
+  --input:                 #2C2E32;
+  --ring:                  var(--paw-teal);
+}
+
+@theme inline {
+  --font-sans:    'Inter', sans-serif;
+  --font-heading: 'Baloo 2', sans-serif;
+
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-card:                var(--card);
+  --color-card-foreground:     var(--card-foreground);
+  --color-popover:             var(--popover);
+  --color-popover-foreground:  var(--popover-foreground);
+  --color-primary:             var(--primary);
+  --color-primary-foreground:  var(--primary-foreground);
+  --color-secondary:           var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:               var(--muted);
+  --color-muted-foreground:    var(--muted-foreground);
+  --color-accent:              var(--accent);
+  --color-accent-foreground:   var(--accent-foreground);
+  --color-destructive:         var(--destructive);
+  --color-border:              var(--border);
+  --color-input:               var(--input);
+  --color-ring:                var(--ring);
+
+  --color-paw-orange:       var(--paw-orange);
+  --color-paw-orange-dark:  var(--paw-orange-dark);
+  --color-paw-orange-light: var(--paw-orange-light);
+  --color-paw-teal:         var(--paw-teal);
+  --color-paw-teal-dark:    var(--paw-teal-dark);
+  --color-paw-teal-light:   var(--paw-teal-light);
+  --color-paw-cream:        var(--paw-cream);
+  --color-paw-purple:       var(--paw-purple);
+  --color-paw-coral:        var(--paw-coral);
+  --color-paw-blue:         var(--paw-blue);
+  --color-paw-green:        var(--paw-green);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    margin: 0;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+}

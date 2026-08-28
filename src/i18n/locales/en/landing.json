@@ -1,0 +1,103 @@
+{
+  "hero": {
+    "eyebrow": "Now inviting early access",
+    "title": "Every moment with your pet, in one home.",
+    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PawHub — Petaverse brings it together.",
+    "ctaPrimary": "Join the waitlist",
+    "ctaSecondary": "See how it works",
+    "statPets": "Pet profiles managed",
+    "statProviders": "Vets & groomers mapped",
+    "statLanguages": "Languages supported"
+  },
+  "features": {
+    "eyebrow": "Everything, one app",
+    "title": "One app for every side of pet parenthood",
+    "subtitle": "Petaverse brings health tracking, community, adoption and lost & found together — so you're never juggling five different apps for one pet.",
+    "items": [
+      {
+        "title": "PawCare health tracking",
+        "description": "Health score, nutrition, activity and vaccination status at a glance, plus reminders before the next vet visit."
+      },
+      {
+        "title": "PawHub community",
+        "description": "A feed just for pet people: follow other pets, share posts, comment, and discover who's nearby."
+      },
+      {
+        "title": "Adoption",
+        "description": "Browse listings from shelters and fosters near you, filter by species and breed, and apply right from the app."
+      },
+      {
+        "title": "Lost & Found",
+        "description": "Report a missing pet in seconds, alert nearby volunteers, and get matched with found-pet sightings on the map."
+      },
+      {
+        "title": "Nearby providers map",
+        "description": "Find vets, groomers and pet shops around you, with ratings, hours and directions built in."
+      },
+      {
+        "title": "PawBot assistant",
+        "description": "Ask about nutrition, breed-specific care or symptoms and get grounded, practical answers instantly."
+      }
+    ]
+  },
+  "showcase": {
+    "eyebrow": "Inside the app",
+    "title": "Designed to feel like home",
+    "subtitle": "A warm, uncluttered interface — built so every pet parent, not just the tech-savvy ones, feels at ease."
+  },
+  "pawcare": {
+    "eyebrow": "PawCare",
+    "title": "Health tracking that keeps you ahead of it",
+    "description": "See your pet's health score, nutrition status and activity in one screen, keep vaccination records up to date, and never miss the next vet visit again.",
+    "bullets": [
+      "Health score with plain-language status",
+      "Vaccination & medical record history",
+      "Daily activity tracking",
+      "Upcoming visit reminders"
+    ]
+  },
+  "community": {
+    "eyebrow": "PawHub",
+    "title": "A social feed built for pets, not ads",
+    "description": "Give your pet a profile, follow the ones you meet at the park, and share their moments with a community that actually cares.",
+    "bullets": [
+      "Follow, comment and discover nearby pets",
+      "Co-own a profile with family or a partner",
+      "Lost & found alerts woven right into the feed",
+      "Moderated, spam-free by design"
+    ]
+  },
+  "howItWorks": {
+    "eyebrow": "Getting started",
+    "title": "Up and running in three steps",
+    "steps": [
+      {
+        "title": "Create your pet's profile",
+        "description": "Add your pet's species, breed and basics — or bring over records from your vet."
+      },
+      {
+        "title": "Set up PawCare",
+        "description": "Log vaccinations, track nutrition and activity, and find providers near you."
+      },
+      {
+        "title": "Join PawHub",
+        "description": "Follow other pets, post updates, and tap into the lost & found network in your area."
+      }
+    ]
+  },
+  "waitlist": {
+    "eyebrow": "Early access",
+    "title": "Be the first to know when Petaverse launches",
+    "subtitle": "We'll send one email when the app is ready — no spam, ever.",
+    "emailPlaceholder": "you@email.com",
+    "submit": "Join the waitlist",
+    "submitting": "Joining…",
+    "success": "You're on the list — we'll be in touch soon.",
+    "error": "Something went wrong. Please try again.",
+    "invalidEmail": "Enter a valid email address."
+  },
+  "footer": {
+    "description": "Petaverse is the one home for every moment with your pet — health, community, adoption and lost & found, together.",
+    "rights": "All rights reserved."
+  }
+}
