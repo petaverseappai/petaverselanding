@@ -12,7 +12,7 @@ export function Footer() {
         <div className="flex flex-col justify-between gap-8 sm:flex-row">
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
-              <img src="/assets/brand/paw-mark.svg" alt="" className="h-8 w-8" />
+              <img src="/assets/brand/logo.png" alt="" className="h-8 w-auto" />
               <span className="font-heading text-lg font-bold text-foreground">
                 {t("common:appName")}
               </span>

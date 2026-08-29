@@ -2,11 +2,10 @@
   "hero": {
     "eyebrow": "Now inviting early access",
     "title": "Every moment with your pet, in one home.",
-    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PawHub. Petaverse brings it together.",
+    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PetaHub. Petaverse brings it together.",
     "ctaPrimary": "Join the waitlist",
     "ctaSecondary": "See how it works",
-    "statPets": "Pet profiles managed",
-    "statProviders": "Vets & groomers mapped",
+    "statSpecies": "Pet species supported",
     "statLanguages": "Languages supported"
   },
   "features": {
@@ -15,12 +14,12 @@
     "subtitle": "Petaverse brings health tracking, community, adoption and lost & found together, so you're never juggling five different apps for one pet.",
     "items": [
       {
-        "title": "PawCare health tracking",
-        "description": "Health score, nutrition, activity and vaccination status at a glance, plus reminders before the next vet visit."
+        "title": "Health tracking",
+        "description": "Health score, activity, medication and vaccination status at a glance, plus reminders before the next vet visit."
       },
       {
-        "title": "PawHub community",
-        "description": "A feed just for pet people: follow other pets, share posts, comment, and discover who's nearby."
+        "title": "PetaHub community",
+        "description": "A feed just for pet people: follow other pets, share posts, comment, and discover communities."
       },
       {
         "title": "Adoption",
@@ -28,14 +27,14 @@
       },
       {
         "title": "Lost & Found",
-        "description": "Report a missing pet in seconds, alert nearby volunteers, and get matched with found-pet sightings on the map."
+        "description": "Report a missing pet in seconds, get matched with found-pet sightings on the map, and connect with people who spotted your pet nearby."
       },
       {
         "title": "Nearby providers map",
         "description": "Find vets, groomers and pet shops around you, with ratings, hours and directions built in."
       },
       {
-        "title": "PawBot assistant",
+        "title": "PetaBot assistant",
         "description": "Ask about nutrition, breed-specific care or symptoms and get grounded, practical answers instantly."
       }
     ]
@@ -46,9 +45,9 @@
     "subtitle": "A warm, uncluttered interface built so every pet parent, not just the tech-savvy ones, feels at ease."
   },
   "pawcare": {
-    "eyebrow": "PawCare",
+    "eyebrow": "PetaCare",
     "title": "Health tracking that keeps you ahead of it",
-    "description": "See your pet's health score, nutrition status and activity in one screen, keep vaccination records up to date, and never miss the next vet visit again.",
+    "description": "See your pet's health score and activity in one screen, keep vaccination records up to date, and never miss the next vet visit again.",
     "bullets": [
       "Health score with plain-language status",
       "Vaccination & medical record history",
@@ -57,14 +56,14 @@
     ]
   },
   "community": {
-    "eyebrow": "PawHub",
+    "eyebrow": "PetaHub",
     "title": "A social feed built for pets, not ads",
     "description": "Give your pet a profile, follow the ones you meet at the park, and share their moments with a community that actually cares.",
     "bullets": [
-      "Follow, comment and discover nearby pets",
-      "Co-own a profile with family or a partner",
+      "Follow, comment and discover pets",
+      "Co-own a pet with family or a partner",
       "Lost & found alerts woven right into the feed",
-      "Moderated, spam-free by design"
+      "Report and block tools built in"
     ]
   },
   "howItWorks": {
@@ -73,14 +72,14 @@
     "steps": [
       {
         "title": "Create your pet's profile",
-        "description": "Add your pet's species, breed and basics, or bring over records from your vet."
+        "description": "Add your pet's species, breed and basics, then log their vaccinations and health history."
       },
       {
-        "title": "Set up PawCare",
-        "description": "Log vaccinations, track nutrition and activity, and find providers near you."
+        "title": "Set up PetaCare",
+        "description": "Log vaccinations, track activity, and find providers near you."
       },
       {
-        "title": "Join PawHub",
+        "title": "Join PetaHub",
         "description": "Follow other pets, post updates, and tap into the lost & found network in your area."
       }
     ]

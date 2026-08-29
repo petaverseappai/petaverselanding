@@ -12,7 +12,7 @@ export function Hero() {
       <div className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-paw-orange-light blur-3xl" />
       <div className="pointer-events-none absolute -left-32 top-96 h-72 w-72 rounded-full bg-paw-teal-light blur-3xl" />
 
-      <Container className="relative grid items-center gap-14 pb-20 lg:grid-cols-2 lg:gap-8">
+      <Container className="relative grid items-center gap-14 pb-20 lg:grid-cols-2 lg:gap-20 xl:gap-28">
         <div className="flex flex-col items-start gap-6">
           <span className="inline-flex items-center gap-2 rounded-full bg-paw-orange-light px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-paw-orange-dark">
             <PawPrint className="h-3.5 w-3.5" />
@@ -44,9 +44,8 @@ export function Hero() {
             </Button>
           </div>
 
-          <div className="mt-4 grid w-full grid-cols-3 gap-6 border-t border-border pt-6">
-            <Stat value="4" label={t("hero.statPets")} />
-            <Stat value="12+" label={t("hero.statProviders")} />
+          <div className="mt-4 grid w-full grid-cols-2 gap-6 border-t border-border pt-6">
+            <Stat value="12" label={t("hero.statSpecies")} />
             <Stat value="3" label={t("hero.statLanguages")} />
           </div>
         </div>
@@ -54,7 +53,7 @@ export function Hero() {
         <div className="relative flex justify-center">
           <div className="absolute -inset-x-10 top-10 h-[420px] rounded-[3rem] bg-gradient-to-b from-paw-orange to-paw-orange-dark/80 sm:-inset-x-16" />
           <PhoneFrame
-            src="/assets/screens/home.jpeg"
+            src="/assets/screens/home.jpg"
             alt="Petaverse home screen showing a pet's health score, nutrition and activity"
             className="relative z-10 w-[260px] sm:w-[280px]"
           />

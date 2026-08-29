@@ -4,11 +4,11 @@ import { SectionHeading } from "@/components/common/SectionHeading";
 import { PhoneFrame } from "@/components/common/PhoneFrame";
 
 const SCREENS = [
-  { src: "/assets/screens/home.jpeg", alt: "Home dashboard with health score and activity" },
+  { src: "/assets/screens/home.jpg", alt: "Home dashboard with health score and activity" },
   { src: "/assets/screens/pawcare-map.jpeg", alt: "Map of nearby vets, groomers and pet shops" },
   { src: "/assets/screens/pawbot.jpeg", alt: "PawBot assistant chat giving nutrition advice" },
-  { src: "/assets/screens/adoption.jpeg", alt: "Adoption listing for a dog available near you" },
-  { src: "/assets/screens/profile.jpeg", alt: "Pet profiles and account settings" },
+  { src: "/assets/screens/adoption.jpg", alt: "Adoption listing for a dog available near you" },
+  { src: "/assets/screens/pawhub.jpg", alt: "Pet social feed inside PetaHub" },
 ];
 
 export function Showcase() {

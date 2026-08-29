@@ -27,9 +27,9 @@ export function Navbar() {
       <Container className="flex h-20 items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5">
           <img
-            src="/assets/brand/paw-mark.svg"
+            src="/assets/brand/logo.png"
             alt=""
-            className="h-9 w-9"
+            className="h-9 w-auto"
           />
           <span className="font-heading text-xl font-bold text-foreground">
             {t("common:appName")}

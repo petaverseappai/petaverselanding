@@ -12,8 +12,8 @@ export function PawCareHighlight() {
       <Container className="grid items-center gap-14 lg:grid-cols-2">
         <div className="order-2 flex justify-center lg:order-1">
           <PhoneFrame
-            src="/assets/screens/pawcare-map.jpeg"
-            alt="PawCare map showing nearby veterinary and grooming providers"
+            src="/assets/screens/home.jpg"
+            alt="PawCare health dashboard showing pet health score, nutrition and activity"
             className="w-[240px] sm:w-[260px]"
           />
         </div>

@@ -32,8 +32,8 @@ export function CommunityHighlight() {
 
         <div className="flex justify-center">
           <PhoneFrame
-            src="/assets/screens/profile.jpeg"
-            alt="Pet profiles inside PawHub"
+            src="/assets/screens/pawhub.jpg"
+            alt="Pet profiles inside PetaHub"
             className="w-[240px] sm:w-[260px]"
           />
         </div>
