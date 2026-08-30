@@ -2,7 +2,7 @@
   "hero": {
     "eyebrow": "Now inviting early access",
     "title": "Every moment with your pet, in one home.",
-    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PetaHub. Petaverse brings it together.",
+    "subtitle": "Track health and vaccines, find the nearest vet, adopt a new best friend, reunite lost pets with their families, and share it all on PetaHub. PetaVerse brings it together.",
     "ctaPrimary": "Join the waitlist",
     "ctaSecondary": "See how it works",
     "statSpecies": "Pet species supported",
@@ -11,7 +11,7 @@
   "features": {
     "eyebrow": "Everything, one app",
     "title": "One app for every side of pet parenthood",
-    "subtitle": "Petaverse brings health tracking, community, adoption and lost & found together, so you're never juggling five different apps for one pet.",
+    "subtitle": "PetaVerse brings health tracking, community, adoption and lost & found together, so you're never juggling five different apps for one pet.",
     "items": [
       {
         "title": "Health tracking",
@@ -86,7 +86,7 @@
   },
   "waitlist": {
     "eyebrow": "Early access",
-    "title": "Be the first to know when Petaverse launches",
+    "title": "Be the first to know when PetaVerse launches",
     "subtitle": "We'll send one email when the app is ready. No spam, ever.",
     "emailPlaceholder": "you@email.com",
     "submit": "Join the waitlist",
@@ -96,7 +96,7 @@
     "invalidEmail": "Enter a valid email address."
   },
   "footer": {
-    "description": "Petaverse is the one home for every moment with your pet: health, community, adoption and lost & found, together.",
+    "description": "PetaVerse is the one home for every moment with your pet: health, community, adoption and lost & found, together.",
     "rights": "All rights reserved."
   }
 }

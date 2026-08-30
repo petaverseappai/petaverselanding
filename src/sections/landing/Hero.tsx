@@ -54,7 +54,7 @@ export function Hero() {
           <div className="absolute -inset-x-10 top-10 h-[420px] rounded-[3rem] bg-gradient-to-b from-paw-orange to-paw-orange-dark/80 sm:-inset-x-16" />
           <PhoneFrame
             src="/assets/screens/home.jpg"
-            alt="Petaverse home screen showing a pet's health score, nutrition and activity"
+            alt="PetaVerse home screen showing a pet's health score, nutrition and activity"
             className="relative z-10 w-[260px] sm:w-[280px]"
           />
         </div>
