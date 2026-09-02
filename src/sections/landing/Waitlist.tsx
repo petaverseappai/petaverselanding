@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { api } from "@/services/axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -17,12 +18,14 @@ export function Waitlist() {
     formState: { errors, isSubmitting },
   } = useForm<WaitlistFormValues>({ resolver: zodResolver(waitlistSchema) });
 
-  const onSubmit = async (_values: WaitlistFormValues) => {
-    // No waitlist endpoint exists on PetsApp.Api yet; this simulates the
-    // round trip so the form is real and testable before that endpoint lands.
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    toast.success(t("waitlist.success"));
-    reset();
+  const onSubmit = async (values: WaitlistFormValues) => {
+    try {
+      await api.post("/waitlist", { email: values.email });
+      toast.success(t("waitlist.success"));
+      reset();
+    } catch {
+      toast.error(t("waitlist.error"));
+    }
   };
 
   return (
