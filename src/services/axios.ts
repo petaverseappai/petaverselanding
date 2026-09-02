@@ -1,9 +1,15 @@
 import axios from "axios";
+import { tokenStore } from "@/lib/auth";
 
-// Points at PetsApp.Api. The landing page itself is static and doesn't call
-// this yet; it's here so the first admin-portal agent (auth, pets, etc.)
-// can import `api` instead of re-deriving the client.
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL ?? "/api",
   headers: { "Content-Type": "application/json" },
+});
+
+api.interceptors.request.use((config) => {
+  const token = tokenStore.get();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
