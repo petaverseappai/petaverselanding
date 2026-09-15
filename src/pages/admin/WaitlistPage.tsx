@@ -1,62 +1,100 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getWaitlist } from "@/services/admin";
+import { Download } from "lucide-react";
+import { getAdminWaitlist, downloadWaitlistCsv } from "@/services/admin";
 import type { WaitlistEntry } from "@/types/admin.types";
+import {
+  PageHeader,
+  Panel,
+  Table,
+  THead,
+  TBody,
+  TH,
+  TR,
+  TD,
+  Pagination,
+  EmptyState,
+} from "@/components/admin/ui";
+import { Button } from "@/components/ui/button";
+import { fmtDateTime, errMessage } from "@/lib/adminFormat";
 
 export default function WaitlistPage() {
-  const [total, setTotal] = useState<number | null>(null);
   const [entries, setEntries] = useState<WaitlistEntry[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
-    getWaitlist()
-      .then((data) => {
-        setTotal(data.total);
-        setEntries(data.entries);
+    setLoading(true);
+    getAdminWaitlist({ page, pageSize: 20 })
+      .then((res) => {
+        setEntries(res.items);
+        setTotalPages(res.totalPages);
+        setTotalCount(res.totalCount);
       })
-      .catch(() => toast.error("Failed to load waitlist."))
+      .catch((e) => toast.error(errMessage(e, "Failed to load waitlist.")))
       .finally(() => setLoading(false));
-  }, []);
+  }, [page]);
+
+  const onExport = async () => {
+    setExporting(true);
+    try {
+      const blob = await downloadWaitlistCsv();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "waitlist.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      toast.error(errMessage(e, "Export failed."));
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Waitlist</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {loading ? "Loading..." : `${total ?? 0} total signup${total === 1 ? "" : "s"}`}
-          </p>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Waitlist"
+        subtitle={loading ? "Loading..." : `${totalCount.toLocaleString()} total signup(s)`}
+        actions={
+          <Button variant="outline" size="sm" onClick={onExport} disabled={exporting}>
+            <Download className="h-4 w-4" />
+            {exporting ? "Exporting..." : "Export CSV"}
+          </Button>
+        }
+      />
 
-      <div className="mt-6 rounded-2xl bg-white shadow-sm overflow-hidden">
+      <Panel>
         {loading ? (
-          <p className="px-6 py-10 text-sm text-gray-400">Loading...</p>
+          <EmptyState>Loading...</EmptyState>
         ) : entries.length === 0 ? (
-          <p className="px-6 py-10 text-sm text-gray-400">No entries yet.</p>
+          <EmptyState>No entries yet.</EmptyState>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-              <tr>
-                <th className="px-6 py-3">#</th>
-                <th className="px-6 py-3">Email</th>
-                <th className="px-6 py-3">Joined</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {entries.map((entry) => (
-                <tr key={entry.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-3 text-gray-400">{entry.id}</td>
-                  <td className="px-6 py-3 text-gray-900">{entry.email}</td>
-                  <td className="px-6 py-3 text-gray-500">
-                    {new Date(entry.joinedAt).toLocaleString()}
-                  </td>
-                </tr>
+          <Table>
+            <THead>
+              <TR>
+                <TH className="w-16">#</TH>
+                <TH>Email</TH>
+                <TH>Joined</TH>
+              </TR>
+            </THead>
+            <TBody>
+              {entries.map((e) => (
+                <TR key={e.id}>
+                  <TD className="text-gray-400">{e.id}</TD>
+                  <TD className="text-gray-900">{e.email}</TD>
+                  <TD className="text-gray-500">{fmtDateTime(e.joinedAt)}</TD>
+                </TR>
               ))}
-            </tbody>
-          </table>
+            </TBody>
+          </Table>
         )}
-      </div>
+        <Pagination page={page} totalPages={totalPages} totalCount={totalCount} onChange={setPage} />
+      </Panel>
     </div>
   );
 }
