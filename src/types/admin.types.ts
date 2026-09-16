@@ -425,6 +425,7 @@ export interface HealthResponse {
 
 export interface AppConfig {
   supportEmail: string;
+  supportPhone: string;
   adoptionContactEmail: string;
   minAppVersion: string;
   latestAppVersion: string;

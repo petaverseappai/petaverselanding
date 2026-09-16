@@ -76,7 +76,7 @@ export default function AppConfigPage() {
     if (!draft) return;
     setSaving(true);
     try {
-      const updated = await updateAppConfig(draft);
+      const updated = await updateAppConfig(draft, config);
       setConfig(updated);
       setDraft(updated);
       toast.success("Config saved.");
@@ -106,6 +106,13 @@ export default function AppConfigPage() {
             <TextField
               value={draft.supportEmail}
               onChange={(v) => set("supportEmail", v)}
+              className="mt-1 w-full max-w-md"
+            />
+          </Row>
+          <Row label="Support phone">
+            <TextField
+              value={draft.supportPhone}
+              onChange={(v) => set("supportPhone", v)}
               className="mt-1 w-full max-w-md"
             />
           </Row>

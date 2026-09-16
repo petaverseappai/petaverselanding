@@ -397,9 +397,56 @@ export async function getAppConfig(): Promise<AppConfig> {
   return data;
 }
 
-export async function updateAppConfig(body: Partial<AppConfig>): Promise<AppConfig> {
-  const { data } = await api.put<AppConfig>("/config", body);
-  return data;
+// The admin PATCH endpoint expects a flat array of { key, value } pairs
+// (snake_case keys), not the nested public AppConfig shape.
+interface UpdateConfigEntry {
+  key: string;
+  value: string;
+}
+
+const str = (v: string | number | boolean | null): string =>
+  v === null ? "" : String(v);
+
+// Flat snake_case key -> value, for the whole editable config surface.
+function flattenConfig(cfg: AppConfig): Record<string, string> {
+  return {
+    support_email: str(cfg.supportEmail),
+    support_phone: str(cfg.supportPhone),
+    adoption_contact_email: str(cfg.adoptionContactEmail),
+    min_app_version: str(cfg.minAppVersion),
+    latest_app_version: str(cfg.latestAppVersion),
+    terms_url: str(cfg.links.terms),
+    privacy_url: str(cfg.links.privacy),
+    help_url: str(cfg.links.help),
+    app_store_url: str(cfg.links.appStore),
+    play_store_url: str(cfg.links.playStore),
+    maintenance_active: str(cfg.maintenance.active),
+    maintenance_message: str(cfg.maintenance.message),
+    maintenance_ends_at: str(cfg.maintenance.endsAt),
+    feature_adoption: str(cfg.features.adoption),
+    feature_ai_chat: str(cfg.features.aiChat),
+    feature_lost_found: str(cfg.features.lostFound),
+    map_default_lat: str(cfg.map.defaultLat),
+    map_default_lng: str(cfg.map.defaultLng),
+    map_default_radius_km: str(cfg.map.defaultRadiusKm),
+  };
+}
+
+// Diff draft against the loaded config; emit only the entries that changed.
+export async function updateAppConfig(
+  draft: AppConfig,
+  original: AppConfig,
+): Promise<AppConfig> {
+  const next = flattenConfig(draft);
+  const prev = flattenConfig(original);
+  const updates: UpdateConfigEntry[] = Object.keys(next)
+    .filter((key) => next[key] !== prev[key])
+    .map((key) => ({ key, value: next[key] }));
+
+  if (updates.length > 0) {
+    await api.patch("/config/admin", updates);
+  }
+  return getAppConfig();
 }
 
 // ---------------------------------------------------------------------------
