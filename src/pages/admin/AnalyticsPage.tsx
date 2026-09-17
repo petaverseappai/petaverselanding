@@ -14,7 +14,7 @@ import type {
   FeedAnalytics, FeedEngagement, PetHealthAnalytics,
   ServicesAnalytics, ChatAnalytics, MediaAnalytics, NotificationsAnalytics,
 } from "@/types/admin.types";
-import { PageHeader, Panel, Tag } from "@/components/admin/ui";
+import { PageHeader, Panel } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { fmtNumber } from "@/lib/adminFormat";
 
