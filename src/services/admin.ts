@@ -50,10 +50,10 @@ export async function adminLogin(email: string, password: string): Promise<AuthR
 }
 
 export async function changePassword(
-  currentPassword: string,
+  oldPassword: string,
   newPassword: string,
 ): Promise<void> {
-  await api.post("/auth/change-password", { currentPassword, newPassword });
+  await api.post("/auth/change-password", { oldPassword, newPassword });
 }
 
 // ---------------------------------------------------------------------------
