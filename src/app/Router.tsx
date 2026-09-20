@@ -19,6 +19,7 @@ import AuditPage from "@/pages/admin/AuditPage";
 import OperationsPage from "@/pages/admin/OperationsPage";
 import AppConfigPage from "@/pages/admin/AppConfigPage";
 import AnalyticsPage from "@/pages/admin/AnalyticsPage";
+import SecurityPage from "@/pages/admin/SecurityPage";
 import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 
@@ -52,6 +53,7 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_OPERATIONS} element={<OperationsPage />} />
           <Route path={ROUTES.ADMIN_CONFIG} element={<AppConfigPage />} />
           <Route path={ROUTES.ADMIN_ANALYTICS} element={<AnalyticsPage />} />
+          <Route path={ROUTES.ADMIN_SECURITY} element={<SecurityPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

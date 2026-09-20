@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
   BarChart2,
+  KeyRound,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ROUTES } from "@/constants/routes";
@@ -55,6 +56,7 @@ const GROUPS: NavGroup[] = [
       { label: "Audit log", icon: ScrollText, to: ROUTES.ADMIN_AUDIT },
       { label: "Operations", icon: Activity, to: ROUTES.ADMIN_OPERATIONS },
       { label: "App Config", icon: Settings, to: ROUTES.ADMIN_CONFIG },
+      { label: "Security", icon: KeyRound, to: ROUTES.ADMIN_SECURITY },
     ],
   },
 ];

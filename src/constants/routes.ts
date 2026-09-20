@@ -21,6 +21,7 @@ export const ROUTES = {
   ADMIN_OPERATIONS: "/admin/operations",
   ADMIN_CONFIG: "/admin/config",
   ADMIN_ANALYTICS: "/admin/analytics",
+  ADMIN_SECURITY: "/admin/security",
 } as const;
 
 // Helpers for building parameterized paths

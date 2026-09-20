@@ -49,6 +49,13 @@ export async function adminLogin(email: string, password: string): Promise<AuthR
   return data;
 }
 
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<void> {
+  await api.post("/auth/change-password", { currentPassword, newPassword });
+}
+
 // ---------------------------------------------------------------------------
 // Helper: strip undefined/empty params so they don't hit the wire
 // ---------------------------------------------------------------------------
