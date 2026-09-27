@@ -28,7 +28,7 @@ export default function LoginPage() {
         return;
       }
 
-      login(data.accessToken, data.refreshToken);
+      login(data.accessToken);
       navigate(ROUTES.ADMIN, { replace: true });
     } catch {
       toast.error("Invalid credentials.");

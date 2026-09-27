@@ -1,29 +1,26 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { tokenStore, isAccessTokenExpired } from "@/lib/auth";
+import { tokenStore } from "@/lib/auth";
 import { revokeToken } from "@/services/admin";
 
 interface AuthContextValue {
   isAuthenticated: boolean;
-  login: (accessToken: string, refreshToken: string) => void;
+  login: (accessToken: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => !!tokenStore.getAccess() && !isAccessTokenExpired(),
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!tokenStore.getAccess());
 
-  const login = useCallback((accessToken: string, refreshToken: string) => {
-    tokenStore.set(accessToken, refreshToken);
+  const login = useCallback((accessToken: string) => {
+    tokenStore.set(accessToken);
     setIsAuthenticated(true);
   }, []);
 
   const logout = useCallback(() => {
-    const refresh = tokenStore.getRefresh();
-    // Fire-and-forget revoke — clear locally regardless of server response.
-    if (refresh) revokeToken(refresh).catch(() => {});
+    // Fire-and-forget revoke — browser sends the HttpOnly cookie automatically.
+    revokeToken().catch(() => {});
     tokenStore.clear();
     setIsAuthenticated(false);
   }, []);

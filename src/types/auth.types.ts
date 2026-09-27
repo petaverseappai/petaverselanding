@@ -26,8 +26,5 @@ export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 
 export interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
-  userId: string;
-  userCode: string;
   roles: string[];
 }

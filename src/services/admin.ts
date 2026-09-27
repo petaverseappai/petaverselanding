@@ -512,18 +512,9 @@ export async function getNotificationsAnalytics(): Promise<NotificationsAnalytic
   return data;
 }
 
-export async function refreshTokens(
-  refreshToken: string,
-): Promise<{ accessToken: string; refreshToken: string }> {
-  const { data } = await api.post<{ accessToken: string; refreshToken: string }>(
-    "/auth/refresh",
-    { refreshToken },
-  );
-  return data;
-}
 
-export async function revokeToken(refreshToken: string): Promise<void> {
-  await api.post("/auth/revoke", { refreshToken });
+export async function revokeToken(): Promise<void> {
+  await api.post("/auth/revoke");
 }
 
 // ---------------------------------------------------------------------------

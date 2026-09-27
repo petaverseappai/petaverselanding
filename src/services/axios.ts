@@ -4,6 +4,7 @@ import { tokenStore } from "@/lib/auth";
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL ?? "https://api.petaverseapp.com/api",
   headers: { "Content-Type": "application/json" },
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
@@ -37,18 +38,14 @@ api.interceptors.response.use(
     // Deduplicate concurrent 401s — only one refresh call in flight at a time.
     if (!refreshing) {
       refreshing = (async () => {
-        const refreshToken = tokenStore.getRefresh();
-        if (!refreshToken) {
-          tokenStore.clear();
-          window.location.href = "/admin/login";
-          return;
-        }
         try {
-          const { data } = await axios.post<{ accessToken: string; refreshToken: string }>(
+          // No body needed — the browser sends the HttpOnly pv_refresh cookie automatically.
+          const { data } = await axios.post<{ accessToken: string }>(
             `${api.defaults.baseURL}/auth/refresh`,
-            { refreshToken },
+            {},
+            { withCredentials: true },
           );
-          tokenStore.set(data.accessToken, data.refreshToken);
+          tokenStore.set(data.accessToken);
         } catch {
           tokenStore.clear();
           window.location.href = "/admin/login";
