@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { tokenStore } from "@/lib/auth";
+import { tokenStore, isAccessTokenExpired } from "@/lib/auth";
 import { revokeToken } from "@/services/admin";
 
 interface AuthContextValue {
@@ -11,7 +11,9 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => !!tokenStore.getAccess());
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => !!tokenStore.getAccess() && !isAccessTokenExpired(),
+  );
 
   const login = useCallback((accessToken: string, refreshToken: string) => {
     tokenStore.set(accessToken, refreshToken);

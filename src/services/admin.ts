@@ -38,7 +38,24 @@ import type {
   ChatAnalytics,
   MediaAnalytics,
   NotificationsAnalytics,
+  ServiceProviderListItem,
+  ServiceProviderDetail,
+  ServiceProviderWrite,
+  ServiceProviderBranch,
+  ServiceProviderHour,
+  Category,
 } from "@/types/admin.types";
+
+// Re-export types used in service provider pages
+export type { LookupItem };
+export type {
+  ServiceProviderListItem,
+  ServiceProviderDetail,
+  ServiceProviderWrite,
+  ServiceProviderBranch,
+  ServiceProviderHour,
+  Category,
+};
 
 // ---------------------------------------------------------------------------
 // Auth (§2)
@@ -507,4 +524,112 @@ export async function refreshTokens(
 
 export async function revokeToken(refreshToken: string): Promise<void> {
   await api.post("/auth/revoke", { refreshToken });
+}
+
+// ---------------------------------------------------------------------------
+// Service Providers (§12)
+// ---------------------------------------------------------------------------
+
+export async function getServiceProviders(query: {
+  search?: string;
+  categoryId?: number;
+  verified?: boolean;
+  isVet?: boolean;
+  page?: number;
+  pageSize?: number;
+}): Promise<PagedResult<ServiceProviderListItem>> {
+  const { data } = await api.get<PagedResult<ServiceProviderListItem>>(
+    "/admin/service-providers",
+    { params: params(query) },
+  );
+  return data;
+}
+
+export async function getServiceProvider(id: number): Promise<ServiceProviderDetail> {
+  const { data } = await api.get<ServiceProviderDetail>(
+    `/admin/service-providers/${id}`,
+  );
+  return data;
+}
+
+export async function createServiceProvider(
+  body: ServiceProviderWrite,
+): Promise<ServiceProviderDetail> {
+  const { data } = await api.post<ServiceProviderDetail>(
+    "/admin/service-providers",
+    body,
+  );
+  return data;
+}
+
+export async function updateServiceProvider(
+  id: number,
+  body: ServiceProviderWrite,
+): Promise<ServiceProviderDetail> {
+  const { data } = await api.put<ServiceProviderDetail>(
+    `/admin/service-providers/${id}`,
+    body,
+  );
+  return data;
+}
+
+export async function deleteServiceProvider(id: number): Promise<void> {
+  await api.delete(`/admin/service-providers/${id}`);
+}
+
+// ---------------------------------------------------------------------------
+// Lookups for Service Provider forms
+// ---------------------------------------------------------------------------
+
+export async function getCategories(): Promise<Category[]> {
+  const { data } = await api.get<Category[]>("/service-providers/categories");
+  return data;
+}
+
+export async function getLookupsByType(
+  type: "services" | "species" | "specializations",
+): Promise<LookupItem[]> {
+  const { data } = await api.get<{ items: LookupItem[] } | LookupItem[]>(
+    `/admin/lookups/${type}`,
+    { params: { pageSize: 200 } },
+  );
+  return Array.isArray(data) ? data : data.items;
+}
+
+// ---------------------------------------------------------------------------
+// Media upload (3-step presigned flow)
+// ---------------------------------------------------------------------------
+
+export interface UploadUrlResponse {
+  assetId: string;
+  uploadUrl: string;
+  objectKey: string;
+  contentType: string;
+  expiresAt: string;
+}
+
+export interface ConfirmUploadResponse {
+  id: string;
+  category: number;
+  contentType: string;
+  sizeBytes: number;
+  url: string;
+  createdAt: string;
+}
+
+export async function getUploadUrl(
+  contentType: string,
+  fileName: string,
+): Promise<UploadUrlResponse> {
+  const { data } = await api.post<UploadUrlResponse>("/media/upload-url", {
+    category: 9, // ProviderLogo
+    contentType,
+    fileName,
+  });
+  return data;
+}
+
+export async function confirmUpload(assetId: string): Promise<ConfirmUploadResponse> {
+  const { data } = await api.post<ConfirmUploadResponse>(`/media/${assetId}/confirm`);
+  return data;
 }

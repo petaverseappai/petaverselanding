@@ -575,3 +575,78 @@ export interface NotificationsAnalytics {
   };
   unreadByType: { type: string; count: number }[];
 }
+
+// ---------------------------------------------------------------------------
+// Service Providers (§12)
+// ---------------------------------------------------------------------------
+
+export interface Category {
+  id: number;
+  slug: string;
+  name: string;
+  sortOrder: number;
+}
+
+export interface ServiceProviderListItem {
+  id: number;
+  name: string;
+  isVerified: boolean;
+  isVet: boolean;
+  primaryCategoryId: number;
+  branchCount: number;
+  rating: number;
+  reviewCount: number;
+  createdAt: string;
+}
+
+export interface ServiceProviderBranch {
+  id?: number;
+  address: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+  whatsApp?: string | null;
+  emergency?: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  email?: string | null;
+}
+
+export interface ServiceProviderCategory {
+  categoryId: number;
+  isPrimary: boolean;
+}
+
+export interface ServiceProviderSpecialization {
+  specializationId: number;
+  otherName?: string | null;
+}
+
+export interface ServiceProviderHour {
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  interval: number;
+}
+
+export interface ServiceProviderWrite {
+  name: string;
+  description: string;
+  isVerified: boolean;
+  isVet: boolean;
+  logoUrl: string;
+  appUserId?: string | null;
+  branches: ServiceProviderBranch[];
+  categories: ServiceProviderCategory[];
+  serviceIds: number[];
+  speciesIds: number[];
+  specializations: ServiceProviderSpecialization[];
+  hours: ServiceProviderHour[];
+}
+
+export interface ServiceProviderDetail extends ServiceProviderWrite {
+  id: number;
+  createdAt: string;
+  rating: number;
+  reviewCount: number;
+}

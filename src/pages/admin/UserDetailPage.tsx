@@ -30,6 +30,7 @@ import {
   TD,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ROUTES } from "@/constants/routes";
 import { fmtDate, fmtDateTime, userStatusTone, errMessage } from "@/lib/adminFormat";
 
@@ -351,11 +352,9 @@ function RolesModal({
             key={role}
             className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 px-3 py-2 text-sm"
           >
-            <input
-              type="checkbox"
+            <Checkbox
               checked={selected.includes(role)}
               onChange={() => toggle(role)}
-              className="h-4 w-4 accent-paw-orange"
             />
             <ShieldCheck className="h-4 w-4 text-gray-400" />
             {role}

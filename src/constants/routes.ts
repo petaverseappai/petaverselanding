@@ -22,6 +22,8 @@ export const ROUTES = {
   ADMIN_CONFIG: "/admin/config",
   ADMIN_ANALYTICS: "/admin/analytics",
   ADMIN_SECURITY: "/admin/security",
+  ADMIN_SERVICE_PROVIDERS: "/admin/service-providers",
+  ADMIN_SERVICE_PROVIDER_DETAIL: "/admin/service-providers/:id",
 } as const;
 
 // Helpers for building parameterized paths
@@ -29,4 +31,5 @@ export const adminPaths = {
   moderationDetail: (id: number | string) => `/admin/moderation/${id}`,
   userDetail: (id: string) => `/admin/users/${id}`,
   communityDetail: (id: number | string) => `/admin/communities/${id}`,
+  serviceProviderDetail: (id: number | string) => `/admin/service-providers/${id}`,
 };
