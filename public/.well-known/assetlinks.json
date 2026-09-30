@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.petaverse.app",
+      "sha256_cert_fingerprints": [
+        "2F:0F:6B:33:6A:BE:7A:C1:D0:8A:C1:14:B7:11:BB:B0:71:14:1C:D2:D7:8E:01:DE:43:1B:6B:94:C2:A2:76:49"
+      ]
+    }
+  }
+]

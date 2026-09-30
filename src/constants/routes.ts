@@ -1,5 +1,6 @@
 export const ROUTES = {
   LANDING: "/",
+  SHARE: "/p/:id",
 
   ADMIN: "/admin",
   ADMIN_LOGIN: "/admin/login",
@@ -32,4 +33,8 @@ export const adminPaths = {
   userDetail: (id: string) => `/admin/users/${id}`,
   communityDetail: (id: number | string) => `/admin/communities/${id}`,
   serviceProviderDetail: (id: number | string) => `/admin/service-providers/${id}`,
+};
+
+export const sharePaths = {
+  post: (id: string | number) => `/p/${id}`,
 };
