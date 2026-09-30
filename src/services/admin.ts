@@ -437,6 +437,7 @@ function flattenConfig(cfg: AppConfig): Record<string, string> {
     support_email: str(cfg.supportEmail),
     support_phone: str(cfg.supportPhone),
     adoption_contact_email: str(cfg.adoptionContactEmail),
+    base_url: str(cfg.baseUrl),
     min_app_version: str(cfg.minAppVersion),
     latest_app_version: str(cfg.latestAppVersion),
     terms_url: str(cfg.links.terms),

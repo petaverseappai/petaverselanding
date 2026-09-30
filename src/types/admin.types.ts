@@ -427,6 +427,7 @@ export interface AppConfig {
   supportEmail: string;
   supportPhone: string;
   adoptionContactEmail: string;
+  baseUrl: string;
   minAppVersion: string;
   latestAppVersion: string;
   links: {

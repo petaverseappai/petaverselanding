@@ -123,6 +123,13 @@ export default function AppConfigPage() {
               className="mt-1 w-full max-w-md"
             />
           </Row>
+          <Row label="Base URL">
+            <TextField
+              value={draft.baseUrl}
+              onChange={(v) => set("baseUrl", v)}
+              className="mt-1 w-full max-w-md"
+            />
+          </Row>
           <Row label="Min app version">
             <TextField
               value={draft.minAppVersion}
