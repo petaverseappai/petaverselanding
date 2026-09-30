@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import LandingPage from "@/pages/landing/LandingPage";
 import SharePage from "@/pages/share/SharePage";
+import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import LoginPage from "@/pages/admin/LoginPage";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import ModerationPage from "@/pages/admin/ModerationPage";
@@ -32,6 +33,7 @@ export function AppRouter() {
       <Routes>
         <Route path={ROUTES.LANDING} element={<LandingPage />} />
         <Route path={ROUTES.SHARE} element={<SharePage />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
         <Route path={ROUTES.ADMIN_LOGIN} element={<LoginPage />} />
         <Route
           element={

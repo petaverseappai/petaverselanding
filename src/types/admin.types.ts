@@ -611,6 +611,7 @@ export interface ServiceProviderBranch {
   website?: string | null;
   instagram?: string | null;
   email?: string | null;
+  storefrontImageUrl?: string | null;
 }
 
 export interface ServiceProviderCategory {

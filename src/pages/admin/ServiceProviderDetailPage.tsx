@@ -294,6 +294,7 @@ const EMPTY_BRANCH: ServiceProviderBranch = {
   website: null,
   instagram: null,
   email: null,
+  storefrontImageUrl: null,
 };
 
 function BranchEditor({
@@ -302,12 +303,16 @@ function BranchEditor({
   total,
   onUpdate,
   onRemove,
+  onStorefrontUpload,
+  isUploading,
 }: {
   branch: ServiceProviderBranch;
   index: number;
   total: number;
   onUpdate: (patch: Partial<ServiceProviderBranch>) => void;
   onRemove: () => void;
+  onStorefrontUpload: (file: File) => Promise<void>;
+  isUploading: boolean;
 }) {
   const opt = (field: keyof ServiceProviderBranch) =>
     (branch[field] as string | null) ?? "";
@@ -330,6 +335,43 @@ function BranchEditor({
       </div>
 
       <div className="p-4 space-y-3">
+        <div>
+          <label className="mb-2 block text-xs font-medium text-gray-500">Storefront Image</label>
+          <div className="flex items-center gap-4">
+            {branch.storefrontImageUrl ? (
+              <div className="relative shrink-0">
+                <img
+                  src={branch.storefrontImageUrl}
+                  alt="Storefront"
+                  className="h-20 w-32 rounded-2xl object-cover border border-border shadow-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => onUpdate({ storefrontImageUrl: null })}
+                  className="absolute -top-1.5 -right-1.5 rounded-full bg-white border border-border p-0.5 text-gray-400 hover:text-red-500 shadow-sm transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ) : (
+              <div className="h-20 w-32 shrink-0 rounded-2xl border-2 border-dashed border-border bg-muted flex items-center justify-center">
+                <Upload className="h-5 w-5 text-gray-300" />
+              </div>
+            )}
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-muted px-4 py-2 text-sm font-medium text-gray-600 hover:bg-white hover:border-paw-orange transition-colors">
+              <Upload className="h-4 w-4 text-gray-400" />
+              {isUploading ? "Uploading..." : "Upload image"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => { if (e.target.files?.[0]) onStorefrontUpload(e.target.files[0]); }}
+                disabled={isUploading}
+              />
+            </label>
+          </div>
+        </div>
+
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs font-medium text-gray-500">Address *</label>
@@ -430,6 +472,7 @@ export default function ServiceProviderDetailPage() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingBranchIdx, setUploadingBranchIdx] = useState<number | null>(null);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [services, setServices] = useState<LookupItem[]>([]);
@@ -510,6 +553,34 @@ export default function ServiceProviderDetailPage() {
       toast.error(errMessage(e, "Failed to upload logo."));
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleStorefrontUpload = async (branchIdx: number, file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      return;
+    }
+    setUploadingBranchIdx(branchIdx);
+    try {
+      const uploadInfo = await getUploadUrl(file.type, file.name);
+      const putResponse = await fetch(uploadInfo.uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": uploadInfo.contentType },
+        body: await file.arrayBuffer(),
+      });
+      if (!putResponse.ok) throw new Error("Failed to upload to R2");
+      const confirmResponse = await confirmUpload(uploadInfo.assetId);
+      setFormData((prev) => {
+        const branches = [...prev.branches];
+        branches[branchIdx] = { ...branches[branchIdx], storefrontImageUrl: confirmResponse.url };
+        return { ...prev, branches };
+      });
+      toast.success("Storefront image uploaded.");
+    } catch (e) {
+      toast.error(errMessage(e, "Failed to upload storefront image."));
+    } finally {
+      setUploadingBranchIdx(null);
     }
   };
 
@@ -676,6 +747,8 @@ export default function ServiceProviderDetailPage() {
                       branches: prev.branches.filter((_, i) => i !== idx),
                     }))
                   }
+                  onStorefrontUpload={(file) => handleStorefrontUpload(idx, file)}
+                  isUploading={uploadingBranchIdx === idx}
                 />
               ))}
               <Button

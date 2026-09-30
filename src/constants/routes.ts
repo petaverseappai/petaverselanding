@@ -1,6 +1,7 @@
 export const ROUTES = {
   LANDING: "/",
   SHARE: "/p/:id",
+  RESET_PASSWORD: "/reset-password",
 
   ADMIN: "/admin",
   ADMIN_LOGIN: "/admin/login",
