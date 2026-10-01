@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
 import { resetPassword } from "@/services/auth";
 import { Button } from "@/components/ui/button";
@@ -8,10 +7,31 @@ import { Input } from "@/components/ui/input";
 const APP_URL = import.meta.env.VITE_APP_URL ?? "https://petaverseapp.com";
 const MIN_PASSWORD_LENGTH = 6;
 
+// Read a query param straight from the raw query string, NOT via URLSearchParams.
+// The reset token is base64url and the backend URI-escapes it, so `+` arrives as
+// `%2B`. URLSearchParams decodes `+` as a space (form-urlencoded rule), which
+// corrupts the token and makes Identity reject it as "Invalid token". Here we
+// take the raw segment and run only decodeURIComponent (which leaves `+` alone);
+// as a last-resort fallback we restore any stray space back to `+`.
+function rawQueryParam(name: string): string | null {
+  const query = window.location.search.replace(/^\?/, "");
+  for (const pair of query.split("&")) {
+    const eq = pair.indexOf("=");
+    const key = eq === -1 ? pair : pair.slice(0, eq);
+    if (key !== name) continue;
+    const rawValue = eq === -1 ? "" : pair.slice(eq + 1);
+    try {
+      return decodeURIComponent(rawValue).replace(/ /g, "+");
+    } catch {
+      return rawValue.replace(/ /g, "+");
+    }
+  }
+  return null;
+}
+
 export default function ResetPasswordPage() {
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  const userId = searchParams.get("userId");
+  const token = rawQueryParam("token");
+  const userId = rawQueryParam("userId");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -47,12 +67,6 @@ export default function ResetPasswordPage() {
           Your password has been changed. You can now sign in with your new
           password from the PetaVerse app.
         </p>
-        <a
-          href={APP_URL}
-          className="mt-6 inline-block text-sm font-semibold text-paw-orange hover:underline"
-        >
-          Open PetaVerse
-        </a>
       </Shell>
     );
   }
