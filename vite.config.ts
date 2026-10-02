@@ -116,11 +116,11 @@ export default defineConfig(({ mode }) => {
 
   const csp = [
     "default-src 'self'",
-    "script-src 'self'",
+    "script-src 'self' https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https://media.petaverseapp.com https://cdn.example.com https://*.r2.cloudflarestorage.com",
-    `connect-src 'self' ${backendOrigin} https://media.petaverseapp.com https://*.r2.cloudflarestorage.com`,
+    `connect-src 'self' ${backendOrigin} https://media.petaverseapp.com https://*.r2.cloudflarestorage.com https://cloudflareinsights.com`,
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
