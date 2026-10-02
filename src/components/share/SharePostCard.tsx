@@ -11,11 +11,35 @@ interface PostData {
 
 interface SharePostCardProps {
   post: PostData;
+  id: string;
 }
 
-export function SharePostCard({ post }: SharePostCardProps) {
+export function SharePostCard({ post, id }: SharePostCardProps) {
   const appStoreUrl = "https://apps.apple.com/app/petaverse/id1234567890";
   const playStoreUrl = "https://play.google.com/store/apps/details?id=com.petaverse.app";
+
+  function openInApp() {
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    const isAndroid = /Android/i.test(ua);
+    const storeUrl = isIOS ? appStoreUrl : isAndroid ? playStoreUrl : null;
+
+    window.location.href = `petaverse://p/${id}`;
+
+    if (storeUrl) {
+      const timer = setTimeout(() => {
+        if (!document.hidden) {
+          window.location.href = storeUrl;
+        }
+      }, 1800);
+
+      const onHide = () => {
+        clearTimeout(timer);
+        document.removeEventListener("visibilitychange", onHide);
+      };
+      document.addEventListener("visibilitychange", onHide);
+    }
+  }
 
   return (
     <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
@@ -88,12 +112,12 @@ export function SharePostCard({ post }: SharePostCardProps) {
 
         {/* Already Have It Button */}
         <div className="space-y-3">
-          <a
-            href={post.appUrl}
+          <button
+            onClick={openInApp}
             className="block w-full py-3 px-4 border-2 border-blue-600 text-blue-600 text-center rounded-lg hover:bg-blue-50 transition font-medium"
           >
-            Open in PetaVerse App
-          </a>
+            Open in PetaVerse
+          </button>
         </div>
 
         {/* Sign In Option */}

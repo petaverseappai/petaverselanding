@@ -120,7 +120,7 @@ export default function SharePage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
-      <SharePostCard post={post} />
+      <SharePostCard post={post} id={id!} />
     </div>
   );
 }
