@@ -578,6 +578,56 @@ export interface NotificationsAnalytics {
 }
 
 // ---------------------------------------------------------------------------
+// OTP Tracking (§14)
+// ---------------------------------------------------------------------------
+
+export interface OtpSummary {
+  requestsToday: number;
+  smsSentToday: number;
+  verificationsSucceededToday: number;
+  verificationsFailedToday: number;
+  verificationRateToday: number | null;
+  captchaChallengesTotal: number;
+  captchaAcknowledgedTotal: number;
+  rateLimitedTotal: number;
+  blockedEmergencyTotal: number;
+  globalState: "Normal" | "Warning" | "Throttle" | "Emergency";
+  requestsLastHour: number;
+  smsLastHour: number;
+  verificationRateLastHour: number | null;
+  requestsLast10Minutes: number;
+}
+
+export interface OtpPrefixMetric {
+  prefix: string;
+  otpRequests: number;
+  smsSent: number;
+  verified: number;
+  verificationRate: number | null;
+}
+
+export interface OtpAbuseMetric {
+  key: string;
+  count: number;
+}
+
+export interface OtpAbuseReport {
+  topIpHashes: OtpAbuseMetric[];
+  topDeviceHashes: OtpAbuseMetric[];
+  topPhonePrefixes: OtpAbuseMetric[];
+  captchaRate: number;
+  rateLimitRate: number;
+}
+
+export interface OtpState {
+  state: "Normal" | "Warning" | "Throttle" | "Emergency";
+}
+
+export interface OtpProviderBalance {
+  balance: number;
+}
+
+// ---------------------------------------------------------------------------
 // Service Providers (§12)
 // ---------------------------------------------------------------------------
 

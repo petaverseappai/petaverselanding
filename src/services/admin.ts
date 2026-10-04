@@ -44,6 +44,11 @@ import type {
   ServiceProviderBranch,
   ServiceProviderHour,
   Category,
+  OtpSummary,
+  OtpPrefixMetric,
+  OtpAbuseReport,
+  OtpState,
+  OtpProviderBalance,
 } from "@/types/admin.types";
 
 // Re-export types used in service provider pages
@@ -623,5 +628,39 @@ export async function getUploadUrl(
 
 export async function confirmUpload(assetId: string): Promise<ConfirmUploadResponse> {
   const { data } = await api.post<ConfirmUploadResponse>(`/media/${assetId}/confirm`);
+  return data;
+}
+
+// ---------------------------------------------------------------------------
+// OTP Tracking (§14)
+// ---------------------------------------------------------------------------
+
+export async function getOtpSummary(): Promise<OtpSummary> {
+  const { data } = await api.get<OtpSummary>("/admin/otp/summary");
+  return data;
+}
+
+export async function getOtpPrefixes(): Promise<OtpPrefixMetric[]> {
+  const { data } = await api.get<OtpPrefixMetric[]>("/admin/otp/prefixes");
+  return data;
+}
+
+export async function getOtpAbuse(): Promise<OtpAbuseReport> {
+  const { data } = await api.get<OtpAbuseReport>("/admin/otp/abuse");
+  return data;
+}
+
+export async function getOtpState(): Promise<OtpState> {
+  const { data } = await api.get<OtpState>("/admin/otp/state");
+  return data;
+}
+
+export async function resetOtpEmergency(): Promise<{ message: string }> {
+  const { data } = await api.post<{ message: string }>("/admin/otp/reset-emergency");
+  return data;
+}
+
+export async function getOtpProviderBalance(): Promise<OtpProviderBalance> {
+  const { data } = await api.get<OtpProviderBalance>("/admin/otp/otp-provider-balance");
   return data;
 }

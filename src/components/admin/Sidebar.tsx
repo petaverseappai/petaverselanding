@@ -17,6 +17,7 @@ import {
   BarChart2,
   KeyRound,
   Stethoscope,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ROUTES } from "@/constants/routes";
@@ -56,6 +57,7 @@ const GROUPS: NavGroup[] = [
       { label: "Broadcast", icon: Megaphone, to: ROUTES.ADMIN_BROADCAST },
       { label: "Waitlist", icon: Mails, to: ROUTES.ADMIN_WAITLIST },
       { label: "Audit log", icon: ScrollText, to: ROUTES.ADMIN_AUDIT },
+      { label: "OTP Tracking", icon: MessageSquare, to: ROUTES.ADMIN_OTP },
       { label: "Operations", icon: Activity, to: ROUTES.ADMIN_OPERATIONS },
       { label: "App Config", icon: Settings, to: ROUTES.ADMIN_CONFIG },
       { label: "Security", icon: KeyRound, to: ROUTES.ADMIN_SECURITY },

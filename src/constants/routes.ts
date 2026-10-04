@@ -26,6 +26,7 @@ export const ROUTES = {
   ADMIN_SECURITY: "/admin/security",
   ADMIN_SERVICE_PROVIDERS: "/admin/service-providers",
   ADMIN_SERVICE_PROVIDER_DETAIL: "/admin/service-providers/:id",
+  ADMIN_OTP: "/admin/otp",
 } as const;
 
 // Helpers for building parameterized paths

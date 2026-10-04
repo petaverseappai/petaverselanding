@@ -24,6 +24,7 @@ import OperationsPage from "@/pages/admin/OperationsPage";
 import AppConfigPage from "@/pages/admin/AppConfigPage";
 import AnalyticsPage from "@/pages/admin/AnalyticsPage";
 import SecurityPage from "@/pages/admin/SecurityPage";
+import OtpDashboardPage from "@/pages/admin/OtpDashboardPage";
 import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 
@@ -58,6 +59,7 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_BROADCAST} element={<BroadcastPage />} />
           <Route path={ROUTES.ADMIN_WAITLIST} element={<WaitlistPage />} />
           <Route path={ROUTES.ADMIN_AUDIT} element={<AuditPage />} />
+          <Route path={ROUTES.ADMIN_OTP} element={<OtpDashboardPage />} />
           <Route path={ROUTES.ADMIN_OPERATIONS} element={<OperationsPage />} />
           <Route path={ROUTES.ADMIN_CONFIG} element={<AppConfigPage />} />
           <Route path={ROUTES.ADMIN_ANALYTICS} element={<AnalyticsPage />} />
