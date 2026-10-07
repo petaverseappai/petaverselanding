@@ -672,6 +672,21 @@ export async function getLegalVersions(): Promise<LegalVersionEntry[]> {
   return data;
 }
 
+export async function publishLegalVersion(body: {
+  documentType: string;
+  version: string;
+  acceptanceKind: string;
+  markdownBody: string;
+  effectiveAt: string | null;
+}): Promise<LegalVersionEntry> {
+  const { data } = await api.post<LegalVersionEntry>("/legal/admin/publish", body);
+  return data;
+}
+
+export async function invalidateLegalCache(documentType: string): Promise<void> {
+  await api.post(`/legal/admin/invalidate-cache`, null, { params: { documentType } });
+}
+
 // ---------------------------------------------------------------------------
 // AWS Operations Dashboard (§15)
 // ---------------------------------------------------------------------------
