@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getLegalVersions, publishLegalVersion, invalidateLegalCache } from "@/services/admin";
 import type { LegalVersionEntry } from "@/types/admin.types";
@@ -28,6 +28,27 @@ const DOC_LABELS: Record<string, string> = {
   TermsAndConditions: "Terms & Conditions",
   CommunityGuidelines: "Community Guidelines",
 };
+
+const DOC_FOLDERS: Record<string, string> = {
+  PrivacyPolicy: "privacy-policy",
+  TermsAndConditions: "terms-and-conditions",
+  CommunityGuidelines: "community-guidelines",
+};
+
+const R2_BASE = "https://media.petaverseapp.com";
+
+async function downloadFromR2(folder: string, version: string) {
+  const r2Url = `${R2_BASE}/legal/${folder}/${version}.md`;
+  const res = await fetch(r2Url);
+  if (!res.ok) throw new Error(`R2 fetch failed: ${res.status}`);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${version}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 const DOC_TYPE_OPTS = [
   { value: "PrivacyPolicy", label: "Privacy Policy" },
@@ -85,14 +106,19 @@ export default function LegalPage() {
 
     setSaving(true);
     try {
-      await publishLegalVersion({
+      const published = await publishLegalVersion({
         documentType: form.documentType,
         version: form.version.trim(),
         acceptanceKind: form.acceptanceKind,
         markdownBody: form.markdownBody,
         effectiveAt: form.effectiveAt.trim() ? new Date(form.effectiveAt).toISOString() : null,
       });
-      toast.success(`${DOC_LABELS[form.documentType]} v${form.version} published.`);
+      const folder = DOC_FOLDERS[form.documentType] ?? form.documentType;
+      await downloadFromR2(folder, form.version.trim());
+      toast.success(
+        `${DOC_LABELS[form.documentType]} v${form.version} published. Drop the downloaded file into legal/${folder}/ and commit.`,
+        { duration: 8000 },
+      );
       setPublishOpen(false);
       load();
     } catch (e) {
@@ -135,7 +161,6 @@ export default function LegalPage() {
           <Table>
             <THead>
               <TR>
-                <TH>Document</TH>
                 <TH>Version</TH>
                 <TH>Kind</TH>
                 <TH>Status</TH>
@@ -146,9 +171,20 @@ export default function LegalPage() {
               </TR>
             </THead>
             <TBody>
-              {items.map((v) => (
+              {Object.entries(
+                items.reduce<Record<string, LegalVersionEntry[]>>((acc, v) => {
+                  (acc[v.documentType] ??= []).push(v);
+                  return acc;
+                }, {}),
+              ).map(([docType, versions]) => (
+                <Fragment key={docType}>
+                  <TR>
+                    <TD colSpan={7} className="bg-gray-50 py-2 font-semibold text-gray-700">
+                      {DOC_LABELS[docType] ?? docType}
+                    </TD>
+                  </TR>
+                  {versions.map((v) => (
                 <TR key={v.id}>
-                  <TD>{DOC_LABELS[v.documentType] ?? v.documentType}</TD>
                   <TD className="font-medium">
                     <a
                       href={v.url}
@@ -191,6 +227,8 @@ export default function LegalPage() {
                     )}
                   </TD>
                 </TR>
+                  ))}
+                </Fragment>
               ))}
             </TBody>
           </Table>

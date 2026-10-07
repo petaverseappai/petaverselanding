@@ -1,83 +1,107 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-/**
- * Minimal, dependency-free renderer for the canonical legal Markdown.
- * Supports the subset our legal docs use: #/##/### headings, paragraphs, "-" bullet lists,
- * GitHub-style pipe tables, and inline bold (**x**). Not a general Markdown engine — intentionally
- * small so we avoid adding a dependency for three static documents.
- */
-
-interface Frontmatter {
-  title?: string;
-  effectiveDate?: string;
-  lastUpdated?: string;
-  version?: string;
+interface LegalContent {
+  documentType: string;
+  version: string;
+  acceptanceKind: string;
+  body: string;
+  effectiveAt: string | null;
 }
 
-export function MarkdownDocument({ raw }: { raw: string }) {
-  const { frontmatter, body } = splitFrontmatter(raw);
+interface Props {
+  documentType: string;
+}
+
+const DOC_TITLES: Record<string, string> = {
+  PrivacyPolicy: "Privacy Policy",
+  TermsAndConditions: "Terms & Conditions",
+  CommunityGuidelines: "Community Guidelines",
+};
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL ?? "https://api.petaverseapp.com/api";
+
+export function MarkdownDocument({ documentType }: Props) {
+  const navigate = useNavigate();
+  const [doc, setDoc] = useState<LegalContent | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (frontmatter.title) document.title = `${frontmatter.title} — PetaVerse`;
-  }, [frontmatter.title]);
+    window.scrollTo({ top: 0 });
+    const CAMEL: Record<string, string> = {
+      PrivacyPolicy: "privacyPolicy",
+      TermsAndConditions: "termsAndConditions",
+      CommunityGuidelines: "communityGuidelines",
+    };
+    fetch(`${API_BASE}/legal/current`)
+      .then((res) => { if (!res.ok) throw new Error(`${res.status}`); return res.json(); })
+      .then((current: Record<string, { version: string }>) => {
+        const version = current[CAMEL[documentType]]?.version;
+        if (!version) throw new Error("no current version");
+        return fetch(`${API_BASE}/legal/${documentType}/${version}/content`);
+      })
+      .then((res) => { if (!res.ok) throw new Error(`${res.status}`); return res.json(); })
+      .then((data: LegalContent) => setDoc(data))
+      .catch(() => setError(true));
+  }, [documentType]);
+
+  const title = DOC_TITLES[documentType] ?? documentType;
+
+  useEffect(() => {
+    document.title = doc ? `${DOC_TITLES[documentType] ?? documentType} — PetaVerse` : `${title} — PetaVerse`;
+  }, [doc, documentType, title]);
+
+  function handleLogoClick(e: React.MouseEvent) {
+    e.preventDefault();
+    if (window.history.length > 1) navigate(-1);
+    else navigate("/");
+  }
 
   return (
     <main className="min-h-screen bg-white text-gray-800">
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-6 sm:py-14">
-        <a href="/" className="inline-flex items-center gap-2.5">
+        <a href="/" onClick={handleLogoClick} className="inline-flex items-center gap-2.5">
           <img src="/assets/brand/logo.png" alt="PetaVerse" className="h-9 w-auto" />
           <span className="text-xl font-bold text-gray-900">PetaVerse</span>
         </a>
 
-        {(frontmatter.effectiveDate || frontmatter.lastUpdated) && (
-          <p className="mt-6 text-sm text-gray-500">
-            {frontmatter.effectiveDate && <>Effective date: {frontmatter.effectiveDate}</>}
-            {frontmatter.effectiveDate && frontmatter.lastUpdated && " · "}
-            {frontmatter.lastUpdated && <>Last updated: {frontmatter.lastUpdated}</>}
-            {frontmatter.version && <> · Version {frontmatter.version}</>}
-          </p>
+        {error && (
+          <p className="mt-10 text-sm text-gray-500">Failed to load document. Please try again later.</p>
         )}
 
-        <article className="mt-4">{renderBlocks(body)}</article>
+        {!doc && !error && (
+          <p className="mt-10 text-sm text-gray-400">Loading…</p>
+        )}
 
-        <footer className="mt-14 border-t border-gray-200 pt-6 text-sm text-gray-500">
-          <p>
-            Questions? Contact us at{" "}
-            <a href="mailto:support@petaverseapp.com" className="text-blue-600 hover:underline">
-              support@petaverseapp.com
-            </a>
-            .
-          </p>
-          <div className="mt-2 space-x-4">
-            <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a>
-            <a href="/terms" className="text-blue-600 hover:underline">Terms &amp; Conditions</a>
-            <a href="/community-guidelines" className="text-blue-600 hover:underline">Community Guidelines</a>
-          </div>
-        </footer>
+        {doc && (
+          <>
+            <p className="mt-6 text-sm text-gray-500">
+              {doc.effectiveAt && <>Effective date: {new Date(doc.effectiveAt).toLocaleDateString()}</>}
+              {doc.effectiveAt && <> · </>}
+              Version {doc.version}
+            </p>
+            <article className="mt-4">{renderBlocks(doc.body)}</article>
+            <footer className="mt-14 border-t border-gray-200 pt-6 text-sm text-gray-500">
+              <p>
+                Questions? Contact us at{" "}
+                <a href="mailto:support@petaverseapp.com" className="text-blue-600 hover:underline">
+                  support@petaverseapp.com
+                </a>
+                .
+              </p>
+              <div className="mt-2 space-x-4">
+                <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a>
+                <a href="/terms" className="text-blue-600 hover:underline">Terms &amp; Conditions</a>
+                <a href="/community-guidelines" className="text-blue-600 hover:underline">Community Guidelines</a>
+              </div>
+            </footer>
+          </>
+        )}
       </div>
     </main>
   );
 }
 
-function splitFrontmatter(raw: string): { frontmatter: Frontmatter; body: string } {
-  const normalized = raw.replace(/\r\n/g, "\n");
-  const fm: Frontmatter = {};
-  if (!normalized.startsWith("---\n")) return { frontmatter: fm, body: normalized };
-
-  const end = normalized.indexOf("\n---", 4);
-  if (end < 0) return { frontmatter: fm, body: normalized };
-
-  const block = normalized.slice(4, end);
-  for (const line of block.split("\n")) {
-    const idx = line.indexOf(":");
-    if (idx <= 0) continue;
-    const key = line.slice(0, idx).trim();
-    const value = line.slice(idx + 1).trim().replace(/^"|"$/g, "");
-    (fm as Record<string, string>)[key] = value;
-  }
-  const body = normalized.slice(end + 4).replace(/^\n+/, "");
-  return { frontmatter: fm, body };
-}
 
 function renderBlocks(body: string) {
   const lines = body.split("\n");
@@ -88,12 +112,8 @@ function renderBlocks(body: string) {
   while (i < lines.length) {
     const line = lines[i];
 
-    if (line.trim() === "") {
-      i++;
-      continue;
-    }
+    if (line.trim() === "") { i++; continue; }
 
-    // Headings
     const h = /^(#{1,3})\s+(.*)$/.exec(line);
     if (h) {
       const level = h[1].length;
@@ -105,33 +125,19 @@ function renderBlocks(body: string) {
       continue;
     }
 
-    // Tables (pipe rows with a separator line below the header)
     if (line.trim().startsWith("|") && i + 1 < lines.length && /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i + 1])) {
       const headers = splitRow(line);
-      i += 2; // skip header + separator
+      i += 2;
       const rows: string[][] = [];
-      while (i < lines.length && lines[i].trim().startsWith("|")) {
-        rows.push(splitRow(lines[i]));
-        i++;
-      }
+      while (i < lines.length && lines[i].trim().startsWith("|")) { rows.push(splitRow(lines[i])); i++; }
       out.push(
         <div key={key++} className="mt-4 overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr>
-                {headers.map((hd, j) => (
-                  <th key={j} className="border border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold">{inline(hd)}</th>
-                ))}
-              </tr>
+              <tr>{headers.map((hd, j) => <th key={j} className="border border-gray-200 bg-gray-50 px-3 py-2 text-left font-semibold">{inline(hd)}</th>)}</tr>
             </thead>
             <tbody>
-              {rows.map((r, ri) => (
-                <tr key={ri}>
-                  {r.map((c, ci) => (
-                    <td key={ci} className="border border-gray-200 px-3 py-2 align-top">{inline(c)}</td>
-                  ))}
-                </tr>
-              ))}
+              {rows.map((r, ri) => <tr key={ri}>{r.map((c, ci) => <td key={ci} className="border border-gray-200 px-3 py-2 align-top">{inline(c)}</td>)}</tr>)}
             </tbody>
           </table>
         </div>
@@ -139,13 +145,9 @@ function renderBlocks(body: string) {
       continue;
     }
 
-    // Bullet lists
     if (/^\s*-\s+/.test(line)) {
       const items: string[] = [];
-      while (i < lines.length && /^\s*-\s+/.test(lines[i])) {
-        items.push(lines[i].replace(/^\s*-\s+/, ""));
-        i++;
-      }
+      while (i < lines.length && /^\s*-\s+/.test(lines[i])) { items.push(lines[i].replace(/^\s*-\s+/, "")); i++; }
       out.push(
         <ul key={key++} className="mt-3 list-disc space-y-1 pl-6 text-[15px] leading-relaxed">
           {items.map((it, j) => <li key={j}>{inline(it)}</li>)}
@@ -154,7 +156,6 @@ function renderBlocks(body: string) {
       continue;
     }
 
-    // Paragraph (gather consecutive non-empty, non-structural lines)
     const para: string[] = [];
     while (
       i < lines.length &&
@@ -162,10 +163,7 @@ function renderBlocks(body: string) {
       !/^(#{1,3})\s+/.test(lines[i]) &&
       !/^\s*-\s+/.test(lines[i]) &&
       !lines[i].trim().startsWith("|")
-    ) {
-      para.push(lines[i]);
-      i++;
-    }
+    ) { para.push(lines[i]); i++; }
     out.push(<p key={key++} className="mt-3 text-[15px] leading-relaxed">{inline(para.join(" "))}</p>);
   }
 
@@ -173,14 +171,9 @@ function renderBlocks(body: string) {
 }
 
 function splitRow(line: string): string[] {
-  return line
-    .trim()
-    .replace(/^\||\|$/g, "")
-    .split("|")
-    .map((c) => c.trim());
+  return line.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
 }
 
-/** Inline formatting: only **bold** is used in our documents. */
 function inline(text: string): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {

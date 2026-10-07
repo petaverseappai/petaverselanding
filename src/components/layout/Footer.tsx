@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Container } from "@/components/common/Container";
 import { NAV_LINKS } from "@/constants/nav";
+import { ROUTES } from "@/constants/routes";
 
 export function Footer() {
   const { t } = useTranslation(["landing", "common"]);
@@ -39,6 +41,17 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             © {year} {t("common:appName")}. {t("landing:footer.rights")}
           </p>
+          <div className="flex gap-5">
+            <Link to={ROUTES.PRIVACY} className="text-xs text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link to={ROUTES.TERMS} className="text-xs text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
+            <Link to={ROUTES.COMMUNITY_GUIDELINES} className="text-xs text-muted-foreground hover:text-foreground">
+              Community Guidelines
+            </Link>
+          </div>
         </div>
       </Container>
     </footer>

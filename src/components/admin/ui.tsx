@@ -312,7 +312,7 @@ export function Modal({
       <div
         className={cn(
           "w-full rounded-2xl bg-white shadow-xl",
-          wide ? "max-w-2xl" : "max-w-md",
+          wide ? "max-w-5xl" : "max-w-md",
         )}
         onClick={(e) => e.stopPropagation()}
       >
