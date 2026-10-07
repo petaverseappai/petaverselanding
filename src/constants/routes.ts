@@ -2,6 +2,9 @@ export const ROUTES = {
   LANDING: "/",
   SHARE: "/p/:id",
   RESET_PASSWORD: "/reset-password",
+  PRIVACY: "/privacy",
+  TERMS: "/terms",
+  COMMUNITY_GUIDELINES: "/community-guidelines",
 
   ADMIN: "/admin",
   ADMIN_LOGIN: "/admin/login",
@@ -24,9 +27,11 @@ export const ROUTES = {
   ADMIN_CONFIG: "/admin/config",
   ADMIN_ANALYTICS: "/admin/analytics",
   ADMIN_SECURITY: "/admin/security",
+  ADMIN_LEGAL: "/admin/legal",
   ADMIN_SERVICE_PROVIDERS: "/admin/service-providers",
   ADMIN_SERVICE_PROVIDER_DETAIL: "/admin/service-providers/:id",
   ADMIN_OTP: "/admin/otp",
+  ADMIN_AWS: "/admin/aws",
 } as const;
 
 // Helpers for building parameterized paths

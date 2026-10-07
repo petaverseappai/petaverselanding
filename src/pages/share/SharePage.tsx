@@ -119,7 +119,11 @@ export default function SharePage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      <a href="/" className="mb-6 flex items-center gap-2.5">
+        <img src="/assets/brand/logo.png" alt="PetaVerse" className="h-9 w-auto" />
+        <span className="text-xl font-bold text-gray-900">PetaVerse</span>
+      </a>
       <SharePostCard post={post} id={id!} />
     </div>
   );

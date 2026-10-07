@@ -702,3 +702,100 @@ export interface ServiceProviderDetail extends ServiceProviderWrite {
   rating: number;
   reviewCount: number;
 }
+
+export interface LegalVersionEntry {
+  id: number;
+  documentType: string;
+  version: string;
+  acceptanceKind: string;
+  contentHash: string;
+  url: string;
+  isPublished: boolean;
+  publishedAt: string | null;
+  effectiveAt: string | null;
+  createdAt: string;
+  isCurrent: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// AWS Operations Dashboard (§15)
+// ---------------------------------------------------------------------------
+
+export interface AwsDashboard {
+  cost: AwsCostSection | null;
+  credits: AwsCreditsSection | null;
+  ec2: AwsEc2Section | null;
+  api: AwsApiSection | null;
+  database: AwsDatabaseSection | null;
+  security: AwsSecuritySection | null;
+  storage: AwsStorageSection | null;
+  notes: string[];
+  cache: AwsDashboardCache | null;
+}
+
+export interface AwsDashboardCache {
+  remainingSeconds: number; // countdown to refresh
+  cachedAt: string; // ISO-8601 UTC
+  expiresAt: string; // ISO-8601 UTC
+}
+
+export interface AwsCostSection {
+  monthToDateSpend: number;
+  forecast: number | null;
+  currency: string;
+  budget: AwsBudgetSummary | null;
+}
+
+export interface AwsBudgetSummary {
+  name: string;
+  limit: number;
+  spent: number;
+  percentUsed: number;
+  status: "Ok" | "Warning" | "Over" | string;
+}
+
+export interface AwsCreditsSection {
+  remaining: number;
+  estimated: number | null;
+  currency: string;
+  expires: string | null;
+}
+
+export interface AwsEc2Section {
+  status: "Running" | "Stopped" | "None" | string;
+  runningCount: number;
+  totalCount: number;
+  cpuPercent: number | null;
+  memoryPercent: number | null;
+  diskPercent: number | null;
+  uptime: string | null;
+  memoryNote: string | null;
+}
+
+export interface AwsApiSection {
+  status: string; // "Healthy" | "Degraded" | "Unhealthy" | "unknown"
+}
+
+export interface AwsDatabaseSection {
+  connected: boolean;
+  responseTimeMs: number | null;
+}
+
+export interface AwsSecuritySection {
+  status: "No issues" | "Review" | string;
+  openPorts: string[];
+  sshRestricted: boolean;
+  certificatesExpiringSoon: number;
+}
+
+export interface AwsStorageSection {
+  status: string;
+  objectCount: number;
+  totalBytes: number;
+  totalSizeDisplay: string;
+  classAOps: number | null;
+  classBOps: number | null;
+  classAPercentOfFree: number | null;
+  classBPercentOfFree: number | null;
+  opsNote: string | null;
+}

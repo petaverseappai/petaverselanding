@@ -18,6 +18,8 @@ import {
   KeyRound,
   Stethoscope,
   MessageSquare,
+  Scale,
+  Cloud,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ROUTES } from "@/constants/routes";
@@ -30,6 +32,7 @@ const GROUPS: NavGroup[] = [
     heading: "Overview",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, to: ROUTES.ADMIN, end: true },
+      { label: "AWS", icon: Cloud, to: ROUTES.ADMIN_AWS },
       { label: "Analytics", icon: BarChart2, to: ROUTES.ADMIN_ANALYTICS },
       { label: "Moderation", icon: ShieldAlert, to: ROUTES.ADMIN_MODERATION },
     ],
@@ -60,6 +63,7 @@ const GROUPS: NavGroup[] = [
       { label: "OTP Tracking", icon: MessageSquare, to: ROUTES.ADMIN_OTP },
       { label: "Operations", icon: Activity, to: ROUTES.ADMIN_OPERATIONS },
       { label: "App Config", icon: Settings, to: ROUTES.ADMIN_CONFIG },
+      { label: "Legal", icon: Scale, to: ROUTES.ADMIN_LEGAL },
       { label: "Security", icon: KeyRound, to: ROUTES.ADMIN_SECURITY },
     ],
   },
@@ -71,6 +75,7 @@ export function Sidebar() {
   return (
     <aside className="flex h-screen w-56 shrink-0 flex-col border-r bg-white">
       <div className="flex items-center gap-2 border-b px-5 py-5">
+        <img src="/assets/brand/logo.png" alt="" className="h-8 w-auto" />
         <span className="text-base font-bold text-gray-900">PetaVerse</span>
         <span className="rounded-md bg-paw-orange px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
           Admin

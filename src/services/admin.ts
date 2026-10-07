@@ -49,6 +49,8 @@ import type {
   OtpAbuseReport,
   OtpState,
   OtpProviderBalance,
+  LegalVersionEntry,
+  AwsDashboard,
 } from "@/types/admin.types";
 
 // Re-export types used in service provider pages
@@ -662,5 +664,21 @@ export async function resetOtpEmergency(): Promise<{ message: string }> {
 
 export async function getOtpProviderBalance(): Promise<OtpProviderBalance> {
   const { data } = await api.get<OtpProviderBalance>("/admin/otp/otp-provider-balance");
+  return data;
+}
+
+export async function getLegalVersions(): Promise<LegalVersionEntry[]> {
+  const { data } = await api.get<LegalVersionEntry[]>("/legal/admin/versions");
+  return data;
+}
+
+// ---------------------------------------------------------------------------
+// AWS Operations Dashboard (§15)
+// ---------------------------------------------------------------------------
+
+export async function getAwsDashboard(includeCost = false): Promise<AwsDashboard> {
+  const { data } = await api.get<AwsDashboard>("/admin/aws/dashboard", {
+    params: { includeCost },
+  });
   return data;
 }

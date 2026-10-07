@@ -3,6 +3,9 @@ import { ROUTES } from "@/constants/routes";
 import LandingPage from "@/pages/landing/LandingPage";
 import SharePage from "@/pages/share/SharePage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
+import PrivacyPage from "@/pages/legal/PrivacyPage";
+import TermsPage from "@/pages/legal/TermsPage";
+import CommunityGuidelinesPage from "@/pages/legal/CommunityGuidelinesPage";
 import LoginPage from "@/pages/admin/LoginPage";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import ModerationPage from "@/pages/admin/ModerationPage";
@@ -24,7 +27,9 @@ import OperationsPage from "@/pages/admin/OperationsPage";
 import AppConfigPage from "@/pages/admin/AppConfigPage";
 import AnalyticsPage from "@/pages/admin/AnalyticsPage";
 import SecurityPage from "@/pages/admin/SecurityPage";
+import LegalPage from "@/pages/admin/LegalPage";
 import OtpDashboardPage from "@/pages/admin/OtpDashboardPage";
+import AwsDashboardPage from "@/pages/admin/AwsDashboardPage";
 import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 
@@ -35,6 +40,9 @@ export function AppRouter() {
         <Route path={ROUTES.LANDING} element={<LandingPage />} />
         <Route path={ROUTES.SHARE} element={<SharePage />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+        <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
+        <Route path={ROUTES.TERMS} element={<TermsPage />} />
+        <Route path={ROUTES.COMMUNITY_GUIDELINES} element={<CommunityGuidelinesPage />} />
         <Route path={ROUTES.ADMIN_LOGIN} element={<LoginPage />} />
         <Route
           element={
@@ -60,10 +68,12 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_WAITLIST} element={<WaitlistPage />} />
           <Route path={ROUTES.ADMIN_AUDIT} element={<AuditPage />} />
           <Route path={ROUTES.ADMIN_OTP} element={<OtpDashboardPage />} />
+          <Route path={ROUTES.ADMIN_AWS} element={<AwsDashboardPage />} />
           <Route path={ROUTES.ADMIN_OPERATIONS} element={<OperationsPage />} />
           <Route path={ROUTES.ADMIN_CONFIG} element={<AppConfigPage />} />
           <Route path={ROUTES.ADMIN_ANALYTICS} element={<AnalyticsPage />} />
           <Route path={ROUTES.ADMIN_SECURITY} element={<SecurityPage />} />
+          <Route path={ROUTES.ADMIN_LEGAL} element={<LegalPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

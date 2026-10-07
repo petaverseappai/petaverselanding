@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "sync-legal": "node scripts/sync-legal.mjs",
+    "check-legal": "node scripts/sync-legal.mjs --check"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
