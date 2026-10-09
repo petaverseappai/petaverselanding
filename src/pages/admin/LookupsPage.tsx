@@ -30,7 +30,8 @@ import {
   ConfirmModal,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
-import { errMessage } from "@/lib/adminFormat";
+import { Checkbox } from "@/components/ui/checkbox";
+import { errMessage, camelToTitle, extractBooleanFields } from "@/lib/adminFormat";
 import { useDebounced } from "@/lib/useDebounced";
 
 export default function LookupsPage() {
@@ -228,10 +229,24 @@ export default function LookupsPage() {
 
 function ExtraSummary({ extra }: { extra: Record<string, unknown> }) {
   return (
-    <span className="font-mono">
-      {Object.entries(extra)
-        .map(([k, v]) => `${k}: ${String(v)}`)
-        .join(", ")}
+    <span className="space-y-1">
+      {Object.entries(extra).map(([k, v]) => {
+        if (typeof v === "boolean") {
+          return (
+            <div key={k} className="flex items-center gap-1 text-xs">
+              <span className="font-medium">{camelToTitle(k)}:</span>
+              <span className={v ? "text-green-600" : "text-gray-400"}>
+                {v ? "✓ Yes" : "✗ No"}
+              </span>
+            </div>
+          );
+        }
+        return (
+          <div key={k} className="font-mono text-xs">
+            {k}: {String(v)}
+          </div>
+        );
+      })}
     </span>
   );
 }
@@ -250,13 +265,25 @@ function LookupModal({
   onSubmit: (body: LookupWriteRequest) => Promise<void>;
 }) {
   const [name, setName] = useState("");
-  const [extraText, setExtraText] = useState("");
+  const [booleans, setBooleans] = useState<Record<string, boolean>>({});
+  const [otherExtra, setOtherExtra] = useState<Record<string, unknown>>({});
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (open) {
       setName(item?.name ?? "");
-      setExtraText(item?.extra ? JSON.stringify(item.extra, null, 2) : "");
+      const boolFields = extractBooleanFields(item?.extra ?? null);
+      setBooleans(boolFields);
+
+      const other: Record<string, unknown> = {};
+      if (item?.extra) {
+        Object.entries(item.extra).forEach(([k, v]) => {
+          if (typeof v !== "boolean") {
+            other[k] = v;
+          }
+        });
+      }
+      setOtherExtra(other);
     }
   }, [open, item]);
 
@@ -265,18 +292,16 @@ function LookupModal({
       toast.error("Name is required.");
       return;
     }
-    let extra: Record<string, unknown> | null = null;
-    if (extraText.trim()) {
-      try {
-        extra = JSON.parse(extraText);
-      } catch {
-        toast.error("Extra must be valid JSON.");
-        return;
-      }
-    }
+    const extra = Object.keys(booleans).length > 0 || Object.keys(otherExtra).length > 0
+      ? { ...otherExtra, ...booleans }
+      : null;
     setSaving(true);
     await onSubmit({ name: name.trim(), extra });
     setSaving(false);
+  };
+
+  const handleToggleBoolean = (key: string) => {
+    setBooleans((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -299,15 +324,38 @@ function LookupModal({
         <Field label="Name">
           <TextField value={name} onChange={setName} className="w-full" />
         </Field>
-        <Field label="Extra (JSON, optional)">
-          <Textarea
-            value={extraText}
-            onChange={setExtraText}
-            rows={6}
-            placeholder='{ "speciesId": 1, "origin": "Scotland" }'
-            className="font-mono text-xs"
-          />
-        </Field>
+
+        {Object.keys(booleans).length > 0 && (
+          <div className="space-y-2 rounded-lg bg-gray-50 p-3">
+            <p className="text-sm font-medium text-gray-700">Supports</p>
+            {Object.entries(booleans).map(([key, value]) => (
+              <label key={key} className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={value}
+                  onChange={() => handleToggleBoolean(key)}
+                />
+                <span className="text-sm text-gray-700">{camelToTitle(key)}</span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {Object.keys(otherExtra).length > 0 && (
+          <Field label="Other properties (JSON)">
+            <Textarea
+              value={JSON.stringify(otherExtra, null, 2)}
+              onChange={(val) => {
+                try {
+                  setOtherExtra(JSON.parse(val));
+                } catch {
+                  // Allow invalid JSON while typing
+                }
+              }}
+              rows={4}
+              className="font-mono text-xs"
+            />
+          </Field>
+        )}
       </div>
     </Modal>
   );

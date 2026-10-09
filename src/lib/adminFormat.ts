@@ -67,3 +67,23 @@ export function errMessage(e: unknown, fallback: string): string {
   const anyE = e as { response?: { data?: { message?: string } } };
   return anyE?.response?.data?.message ?? fallback;
 }
+
+export function camelToTitle(str: string): string {
+  return str
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (s) => s.toUpperCase())
+    .trim();
+}
+
+export function extractBooleanFields(
+  extra: Record<string, unknown> | null
+): Record<string, boolean> {
+  if (!extra) return {};
+  const result: Record<string, boolean> = {};
+  Object.entries(extra).forEach(([key, value]) => {
+    if (typeof value === "boolean") {
+      result[key] = value;
+    }
+  });
+  return result;
+}
