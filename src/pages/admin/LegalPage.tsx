@@ -144,7 +144,7 @@ export default function LegalPage() {
     <div className="space-y-6">
       <PageHeader
         title="Legal documents"
-        subtitle="Published versions, content hashes, and user acceptance gate. Publish new versions directly from here — no API redeploy needed."
+        subtitle="Published versions, content hashes, and user acceptance gate. Publish new versions directly from here: no API redeploy needed."
         actions={
           <Button size="sm" onClick={openPublish}>
             Publish new version
@@ -298,7 +298,7 @@ export default function LegalPage() {
 
           <p className="text-xs text-gray-500">
             Paste the document body without YAML frontmatter. The content is uploaded to R2 and
-            immediately available — no API redeploy needed. A SHA-256 hash of the body is stored in
+            immediately available: no API redeploy needed. A SHA-256 hash of the body is stored in
             the database and shown in this table. Users who accepted an older version will be prompted
             to re-accept on next app open.
           </p>

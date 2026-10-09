@@ -48,7 +48,7 @@ export function MarkdownDocument({ documentType }: Props) {
   const title = DOC_TITLES[documentType] ?? documentType;
 
   useEffect(() => {
-    document.title = doc ? `${DOC_TITLES[documentType] ?? documentType} — PetaVerse` : `${title} — PetaVerse`;
+    document.title = doc ? `${DOC_TITLES[documentType] ?? documentType} : PetaVerse` : `${title} : PetaVerse`;
   }, [doc, documentType, title]);
 
   function handleLogoClick(e: React.MouseEvent) {
