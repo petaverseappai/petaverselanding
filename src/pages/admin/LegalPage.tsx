@@ -106,7 +106,7 @@ export default function LegalPage() {
 
     setSaving(true);
     try {
-      const published = await publishLegalVersion({
+      await publishLegalVersion({
         documentType: form.documentType,
         version: form.version.trim(),
         acceptanceKind: form.acceptanceKind,
