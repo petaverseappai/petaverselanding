@@ -16,6 +16,7 @@ import {
   Field,
   TextField,
   ConfirmModal,
+  LoadingState,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { ROUTES, adminPaths } from "@/constants/routes";
@@ -54,7 +55,7 @@ export default function CommunityDetailPage() {
     }
   };
 
-  if (loading) return <p className="text-sm text-gray-400">Loading...</p>;
+  if (loading) return <LoadingState />;
   if (!community) return <p className="text-sm text-gray-400">Community not found.</p>;
 
   return (

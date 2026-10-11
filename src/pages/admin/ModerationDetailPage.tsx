@@ -24,6 +24,7 @@ import {
   SelectField,
   Textarea,
   TextField,
+  LoadingState,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { ROUTES, adminPaths } from "@/constants/routes";
@@ -61,7 +62,7 @@ export default function ModerationDetailPage() {
     }
   };
 
-  if (loading) return <p className="text-sm text-gray-400">Loading...</p>;
+  if (loading) return <LoadingState />;
   if (!report) return <p className="text-sm text-gray-400">Report not found.</p>;
 
   const isTerminal = report.status === 2 || report.status === 3;

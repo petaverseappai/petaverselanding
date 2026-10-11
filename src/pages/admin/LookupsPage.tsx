@@ -22,6 +22,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   TextField,
   Modal,
@@ -137,7 +138,7 @@ export default function LookupsPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No items.</EmptyState>
         ) : (

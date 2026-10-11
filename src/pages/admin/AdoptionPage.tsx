@@ -14,6 +14,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   TextField,
   SelectField,
@@ -93,7 +94,7 @@ export default function AdoptionPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No listings match these filters.</EmptyState>
         ) : (

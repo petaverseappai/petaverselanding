@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getAppConfig, updateAppConfig } from "@/services/admin";
 import type { AppConfig } from "@/types/admin.types";
-import { PageHeader, Panel, Field, TextField, Textarea } from "@/components/admin/ui";
+import { PageHeader, Panel, Field, TextField, Textarea, LoadingState } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 
 function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
@@ -61,7 +61,7 @@ export default function AppConfigPage() {
       <div className="space-y-6">
         <PageHeader title="App Config" subtitle="Manage runtime configuration for the mobile app." />
         <Panel>
-          <p className="px-6 py-14 text-center text-sm text-gray-400">Loading...</p>
+          <LoadingState />
         </Panel>
       </div>
     );

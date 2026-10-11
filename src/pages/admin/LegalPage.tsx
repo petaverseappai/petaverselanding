@@ -13,6 +13,7 @@ import {
   TD,
   Tag,
   EmptyState,
+  LoadingState,
   Modal,
   Field,
   SelectField,
@@ -154,7 +155,7 @@ export default function LegalPage() {
 
       <Panel>
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No legal document versions have been published yet.</EmptyState>
         ) : (

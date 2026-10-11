@@ -15,6 +15,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   TextField,
   SelectField,
@@ -89,7 +90,7 @@ export default function CommunitiesPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No communities match these filters.</EmptyState>
         ) : (

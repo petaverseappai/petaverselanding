@@ -15,6 +15,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   TextField,
   SelectField,
@@ -106,7 +107,7 @@ export default function UsersPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No users match these filters.</EmptyState>
         ) : (

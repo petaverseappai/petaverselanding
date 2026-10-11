@@ -22,6 +22,7 @@ import {
   TextField,
   Textarea,
   EmptyState,
+  LoadingState,
   Table,
   THead,
   TBody,
@@ -70,7 +71,7 @@ export default function UserDetailPage() {
     }
   };
 
-  if (loading) return <p className="text-sm text-gray-400">Loading...</p>;
+  if (loading) return <LoadingState />;
   if (!user) return <p className="text-sm text-gray-400">User not found.</p>;
 
   return (

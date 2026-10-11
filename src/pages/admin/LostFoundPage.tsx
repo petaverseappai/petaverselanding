@@ -14,6 +14,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   SelectField,
   ConfirmModal,
@@ -109,7 +110,7 @@ export default function LostFoundPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No reports match these filters.</EmptyState>
         ) : (

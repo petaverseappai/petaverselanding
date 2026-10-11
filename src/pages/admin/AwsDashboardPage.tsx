@@ -29,7 +29,7 @@ import type {
   AwsSecuritySection,
   AwsStorageSection,
 } from "@/types/admin.types";
-import { PageHeader, Panel, Tag, type Tone } from "@/components/admin/ui";
+import { PageHeader, Panel, Tag, LoadingState, type Tone } from "@/components/admin/ui";
 import { fmtNumber, fmtDateTime, errMessage } from "@/lib/adminFormat";
 
 // ---------------------------------------------------------------------------
@@ -93,7 +93,7 @@ export default function AwsDashboardPage() {
       />
 
       {loading ? (
-        <p className="text-sm text-gray-400">Loading...</p>
+        <LoadingState />
       ) : !data ? (
         <p className="text-sm text-gray-400">No data.</p>
       ) : (

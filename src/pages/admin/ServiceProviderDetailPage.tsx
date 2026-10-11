@@ -24,6 +24,7 @@ import {
   Field,
   TextField,
   Textarea,
+  LoadingState,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -645,7 +646,7 @@ export default function ServiceProviderDetailPage() {
     }
   };
 
-  if (loading) return <p className="text-sm text-gray-400">Loading...</p>;
+  if (loading) return <LoadingState />;
 
   return (
     <div className="space-y-6">

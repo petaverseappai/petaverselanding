@@ -111,8 +111,27 @@ export function TD({
 // Empty / loading state
 // ---------------------------------------------------------------------------
 
+export function Spinner({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-[#F2A154]",
+        className,
+      )}
+    />
+  );
+}
+
 export function EmptyState({ children }: { children: React.ReactNode }) {
   return <p className="px-6 py-14 text-center text-sm text-gray-400">{children}</p>;
+}
+
+export function LoadingState() {
+  return (
+    <div className="flex items-center justify-center px-6 py-14">
+      <Spinner />
+    </div>
+  );
 }
 
 // ---------------------------------------------------------------------------

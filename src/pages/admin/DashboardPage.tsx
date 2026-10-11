@@ -20,7 +20,7 @@ import type {
   TimeseriesMetric,
   TimeseriesRange,
 } from "@/types/admin.types";
-import { PageHeader, Panel, SelectField } from "@/components/admin/ui";
+import { PageHeader, Panel, SelectField, LoadingState } from "@/components/admin/ui";
 import { fmtNumber, errMessage } from "@/lib/adminFormat";
 
 const ORANGE = "#f97316";
@@ -42,7 +42,7 @@ export default function DashboardPage() {
       <PageHeader title="Dashboard" subtitle="Platform overview at a glance." />
 
       {loading ? (
-        <p className="text-sm text-gray-400">Loading...</p>
+        <LoadingState />
       ) : !summary ? (
         <p className="text-sm text-gray-400">No data.</p>
       ) : (
@@ -128,7 +128,7 @@ function TimeseriesCard() {
         </div>
       </div>
       {loading ? (
-        <div className="flex h-48 items-center justify-center text-sm text-gray-400">Loading...</div>
+        <LoadingState />
       ) : points.length === 0 ? (
         <div className="flex h-48 items-center justify-center text-sm text-gray-400">No data for this range.</div>
       ) : (
