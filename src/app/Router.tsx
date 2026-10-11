@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import LandingPage from "@/pages/landing/LandingPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 import SharePage from "@/pages/share/SharePage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import PrivacyPage from "@/pages/legal/PrivacyPage";
@@ -75,6 +76,7 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_SECURITY} element={<SecurityPage />} />
           <Route path={ROUTES.ADMIN_LEGAL} element={<LegalPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
