@@ -9,6 +9,10 @@ export const ROUTES = {
   ADMIN: "/admin",
   ADMIN_LOGIN: "/admin/login",
 
+  PORTAL: "/portal",
+  PORTAL_LOGIN: "/portal/login",
+  PORTAL_DASHBOARD: "/portal/dashboard",
+
   // Dashboard is the index (ADMIN)
   ADMIN_MODERATION: "/admin/moderation",
   ADMIN_MODERATION_DETAIL: "/admin/moderation/:id",
@@ -41,6 +45,8 @@ export const adminPaths = {
   communityDetail: (id: number | string) => `/admin/communities/${id}`,
   serviceProviderDetail: (id: number | string) => `/admin/service-providers/${id}`,
 };
+
+export const portalPaths = {};
 
 export const sharePaths = {
   post: (id: string | number) => `/p/${id}`,

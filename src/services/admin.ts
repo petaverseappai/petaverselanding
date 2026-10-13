@@ -576,6 +576,46 @@ export async function deleteServiceProvider(id: number): Promise<void> {
   await api.delete(`/admin/service-providers/${id}`);
 }
 
+export async function inviteServiceProvider(id: number, email: string): Promise<void> {
+  await api.post(`/admin/service-providers/${id}/invite`, { email });
+}
+
+export async function verifyServiceProvider(id: number, detail: ServiceProviderDetail): Promise<ServiceProviderDetail> {
+  const { data } = await api.put<ServiceProviderDetail>(`/admin/service-providers/${id}`, {
+    name: detail.name,
+    description: detail.description,
+    isVerified: true,
+    isVet: detail.isVet,
+    logoUrl: detail.logoUrl,
+    appUserId: detail.appUserId,
+    branches: detail.branches,
+    categories: detail.categories,
+    serviceIds: detail.serviceIds,
+    speciesIds: detail.speciesIds,
+    specializations: detail.specializations,
+    hours: detail.hours,
+  });
+  return data;
+}
+
+export async function unverifyServiceProvider(id: number, detail: ServiceProviderDetail): Promise<ServiceProviderDetail> {
+  const { data } = await api.put<ServiceProviderDetail>(`/admin/service-providers/${id}`, {
+    name: detail.name,
+    description: detail.description,
+    isVerified: false,
+    isVet: detail.isVet,
+    logoUrl: detail.logoUrl,
+    appUserId: detail.appUserId,
+    branches: detail.branches,
+    categories: detail.categories,
+    serviceIds: detail.serviceIds,
+    speciesIds: detail.speciesIds,
+    specializations: detail.specializations,
+    hours: detail.hours,
+  });
+  return data;
+}
+
 // ---------------------------------------------------------------------------
 // Lookups for Service Provider forms
 // ---------------------------------------------------------------------------

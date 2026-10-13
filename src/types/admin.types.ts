@@ -701,6 +701,10 @@ export interface ServiceProviderDetail extends ServiceProviderWrite {
   createdAt: string;
   rating: number;
   reviewCount: number;
+  appUserId: string | null;
+  pageId: number | null;
+  pageHandle: string | null;
+  lastLoginAt: string | null;
 }
 
 export interface LegalVersionEntry {
