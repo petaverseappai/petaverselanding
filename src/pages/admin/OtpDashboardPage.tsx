@@ -24,7 +24,7 @@ import type {
   OtpState,
   OtpProviderBalance,
 } from "@/types/admin.types";
-import { PageHeader, Panel, ConfirmModal } from "@/components/admin/ui";
+import { PageHeader, Panel, ConfirmModal, LoadingState } from "@/components/admin/ui";
 import { fmtNumber, errMessage } from "@/lib/adminFormat";
 
 const STATE_COLORS: Record<string, string> = {
@@ -86,7 +86,7 @@ export default function OtpDashboardPage() {
       />
 
       {loading ? (
-        <p className="text-sm text-gray-400">Loading...</p>
+        <LoadingState />
       ) : !summary || !state ? (
         <p className="text-sm text-gray-400">No data.</p>
       ) : (
@@ -316,7 +316,7 @@ function PrefixMetricsCard() {
     <Panel className="p-6">
       <h3 className="mb-4 text-sm font-semibold text-gray-900">OTP by Prefix</h3>
       {loading ? (
-        <div className="flex h-48 items-center justify-center text-sm text-gray-400">Loading...</div>
+        <LoadingState />
       ) : prefixes.length === 0 ? (
         <div className="flex h-48 items-center justify-center text-sm text-gray-400">No data.</div>
       ) : (
@@ -389,7 +389,7 @@ function AbuseReportCard() {
     <Panel className="p-6">
       <h3 className="mb-4 text-sm font-semibold text-gray-900">Abuse Indicators</h3>
       {loading ? (
-        <div className="flex h-48 items-center justify-center text-sm text-gray-400">Loading...</div>
+        <LoadingState />
       ) : !abuse ? (
         <div className="flex h-48 items-center justify-center text-sm text-gray-400">No data.</div>
       ) : (

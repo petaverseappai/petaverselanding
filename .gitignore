@@ -22,3 +22,6 @@ dist-ssr
 # Env
 .env
 .env.local
+
+# Claude Code worktrees
+.claude/worktrees/

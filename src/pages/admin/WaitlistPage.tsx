@@ -14,6 +14,7 @@ import {
   TD,
   Pagination,
   EmptyState,
+  LoadingState,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { fmtDateTime, errMessage } from "@/lib/adminFormat";
@@ -70,7 +71,7 @@ export default function WaitlistPage() {
 
       <Panel>
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : entries.length === 0 ? (
           <EmptyState>No entries yet.</EmptyState>
         ) : (

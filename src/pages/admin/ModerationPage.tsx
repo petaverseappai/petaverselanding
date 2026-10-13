@@ -23,6 +23,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   SelectField,
 } from "@/components/admin/ui";
@@ -133,7 +134,7 @@ export default function ModerationPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No reports match these filters.</EmptyState>
         ) : (

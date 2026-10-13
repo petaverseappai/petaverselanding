@@ -27,6 +27,7 @@ import {
   type Tone,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   TextField,
   SelectField,
@@ -183,7 +184,7 @@ function ListingsTab({ onShowRequests }: { onShowRequests: (l: AdoptionListing) 
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No listings match these filters.</EmptyState>
         ) : (

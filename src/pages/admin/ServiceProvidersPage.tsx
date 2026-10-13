@@ -20,6 +20,7 @@ import {
   Tag,
   Pagination,
   EmptyState,
+  LoadingState,
   FilterBar,
   TextField,
   SelectField,
@@ -143,7 +144,7 @@ export default function ServiceProvidersPage() {
         </div>
 
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : items.length === 0 ? (
           <EmptyState>No providers match these filters.</EmptyState>
         ) : (

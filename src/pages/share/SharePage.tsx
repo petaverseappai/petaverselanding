@@ -113,7 +113,7 @@ export default function SharePage() {
   if (state === "loading" || !post) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-gray-600">Loading...</div>
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#F2A154]" />
       </div>
     );
   }

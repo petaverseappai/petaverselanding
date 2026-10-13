@@ -48,7 +48,7 @@ export function MarkdownDocument({ documentType }: Props) {
   const title = DOC_TITLES[documentType] ?? documentType;
 
   useEffect(() => {
-    document.title = doc ? `${DOC_TITLES[documentType] ?? documentType} — PetaVerse` : `${title} — PetaVerse`;
+    document.title = doc ? `${DOC_TITLES[documentType] ?? documentType} : PetaVerse` : `${title} : PetaVerse`;
   }, [doc, documentType, title]);
 
   function handleLogoClick(e: React.MouseEvent) {
@@ -70,7 +70,9 @@ export function MarkdownDocument({ documentType }: Props) {
         )}
 
         {!doc && !error && (
-          <p className="mt-10 text-sm text-gray-400">Loading…</p>
+          <div className="flex min-h-[50vh] items-center justify-center">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#F2A154]" />
+          </div>
         )}
 
         {doc && (

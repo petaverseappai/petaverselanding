@@ -15,6 +15,7 @@ import {
   TD,
   Tag,
   EmptyState,
+  LoadingState,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { fmtDateTime, jobResultTone, healthTone, errMessage } from "@/lib/adminFormat";
@@ -67,7 +68,7 @@ export default function OperationsPage() {
       <Panel className="p-6">
         <h3 className="mb-4 text-sm font-semibold text-gray-900">Health</h3>
         {loading ? (
-          <p className="text-sm text-gray-400">Loading...</p>
+          <LoadingState />
         ) : !health ? (
           <p className="text-sm text-gray-400">No data.</p>
         ) : (
@@ -95,7 +96,7 @@ export default function OperationsPage() {
       <Panel>
         <h3 className="px-6 pt-6 text-sm font-semibold text-gray-900">Recurring jobs</h3>
         {loading ? (
-          <EmptyState>Loading...</EmptyState>
+          <LoadingState />
         ) : jobs.length === 0 ? (
           <EmptyState>No jobs.</EmptyState>
         ) : (

@@ -14,7 +14,7 @@ import type {
   FeedAnalytics, FeedEngagement, PetHealthAnalytics,
   ServicesAnalytics, ChatAnalytics, MediaAnalytics, NotificationsAnalytics,
 } from "@/types/admin.types";
-import { PageHeader, Panel } from "@/components/admin/ui";
+import { PageHeader, Panel, Spinner } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
 import { fmtNumber } from "@/lib/adminFormat";
 
@@ -81,7 +81,7 @@ function FeedSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <EmptyPanel>Loading...</EmptyPanel>;
+  if (loading) return <EmptyPanel><Spinner /></EmptyPanel>;
   if (!feed || !engagement) return <EmptyPanel>No data.</EmptyPanel>;
 
   const visibilityData = [
@@ -200,7 +200,7 @@ function PetHealthSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <EmptyPanel>Loading...</EmptyPanel>;
+  if (loading) return <EmptyPanel><Spinner /></EmptyPanel>;
   if (!data) return <EmptyPanel>No data.</EmptyPanel>;
 
   const sterilData = [
@@ -326,7 +326,7 @@ function ServicesSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <EmptyPanel>Loading...</EmptyPanel>;
+  if (loading) return <EmptyPanel><Spinner /></EmptyPanel>;
   if (!data) return <EmptyPanel>No data.</EmptyPanel>;
 
   const apptData = [
@@ -419,7 +419,7 @@ function ChatSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <EmptyPanel>Loading...</EmptyPanel>;
+  if (loading) return <EmptyPanel><Spinner /></EmptyPanel>;
   if (!data) return <EmptyPanel>No data.</EmptyPanel>;
 
   const sessionTypeData = [
@@ -498,7 +498,7 @@ function MediaSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <EmptyPanel>Loading...</EmptyPanel>;
+  if (loading) return <EmptyPanel><Spinner /></EmptyPanel>;
   if (!data) return <EmptyPanel>No data.</EmptyPanel>;
 
   const statusData = [
@@ -579,7 +579,7 @@ function NotificationsSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <EmptyPanel>Loading...</EmptyPanel>;
+  if (loading) return <EmptyPanel><Spinner /></EmptyPanel>;
   if (!data) return <EmptyPanel>No data.</EmptyPanel>;
 
   const platformData = [
