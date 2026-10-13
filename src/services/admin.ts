@@ -20,7 +20,10 @@ import type {
   LookupType,
   LookupItem,
   LookupWriteRequest,
+  LookupImportResult,
   AdoptionListing,
+  AdoptionRequestItem,
+  AdoptionRequesterStat,
   LostFoundReport,
   CommunityListItem,
   CommunityDetail,
@@ -51,6 +54,10 @@ import type {
   OtpProviderBalance,
   LegalVersionEntry,
   AwsDashboard,
+  AdminRatingItem,
+  AdminRatingSummary,
+  RatingFlag,
+  RatingSort,
 } from "@/types/admin.types";
 
 // Re-export types used in service provider pages
@@ -259,6 +266,22 @@ export async function deleteLookup(type: LookupType, id: number): Promise<void> 
   await api.delete(`/admin/lookups/${type}/${id}`);
 }
 
+// Bulk import from a .csv / .xlsx file. dryRun validates and previews without writing.
+export async function importLookups(
+  type: LookupType,
+  file: File,
+  dryRun: boolean,
+): Promise<LookupImportResult> {
+  const form = new FormData();
+  form.append("file", file);
+  // Override the instance's JSON content type so axios sends multipart (the browser adds the boundary).
+  const { data } = await api.post<LookupImportResult>(`/admin/lookups/${type}/import`, form, {
+    params: { dryRun },
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+}
+
 // ---------------------------------------------------------------------------
 // Content oversight (§7)
 // ---------------------------------------------------------------------------
@@ -268,17 +291,40 @@ export async function getAdoptionListings(query: {
   status?: number;
   type?: "rehome" | "shelter_stray";
   search?: string;
+  unanswered?: boolean;
   page?: number;
   pageSize?: number;
 }): Promise<PagedResult<AdoptionListing>> {
   const { data } = await api.get<PagedResult<AdoptionListing>>("/admin/adoption/listings", {
-    params: params(query),
+    params: params({ ...query, unanswered: query.unanswered || undefined }),
   });
   return data;
 }
 
 export async function closeAdoptionListing(id: number, reason: string): Promise<void> {
   await api.post(`/admin/adoption/listings/${id}/close`, { reason });
+}
+
+export async function getAdoptionRequests(query: {
+  listingId?: number;
+  requesterId?: string;
+  status?: number;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}): Promise<PagedResult<AdoptionRequestItem>> {
+  const { data } = await api.get<PagedResult<AdoptionRequestItem>>("/admin/adoption/requests", {
+    params: params(query),
+  });
+  return data;
+}
+
+export async function getTopAdoptionRequesters(days = 7): Promise<AdoptionRequesterStat[]> {
+  const { data } = await api.get<AdoptionRequesterStat[]>(
+    "/admin/adoption/requests/top-requesters",
+    { params: { days } },
+  );
+  return data;
 }
 
 // Lost & Found
@@ -695,5 +741,37 @@ export async function getAwsDashboard(includeCost = false): Promise<AwsDashboard
   const { data } = await api.get<AwsDashboard>("/admin/aws/dashboard", {
     params: { includeCost },
   });
+  return data;
+}
+
+// ---------------------------------------------------------------------------
+// Provider ratings
+// ---------------------------------------------------------------------------
+
+export async function getRatings(
+  query: {
+    search?: string;
+    providerId?: number;
+    userId?: string;
+    stars?: number;
+    flag?: RatingFlag | "any";
+    sort?: RatingSort;
+    page?: number;
+    pageSize?: number;
+  } = {},
+): Promise<PagedResult<AdminRatingItem>> {
+  const { data } = await api.get<PagedResult<AdminRatingItem>>("/admin/ratings", {
+    params: params(query),
+  });
+  return data;
+}
+
+export async function getRatingSummary(): Promise<AdminRatingSummary> {
+  const { data } = await api.get<AdminRatingSummary>("/admin/ratings/summary");
+  return data;
+}
+
+export async function deleteRatings(ids: number[], reason: string): Promise<{ deleted: number }> {
+  const { data } = await api.post<{ deleted: number }>("/admin/ratings/delete", { ids, reason });
   return data;
 }

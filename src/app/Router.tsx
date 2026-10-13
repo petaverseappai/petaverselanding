@@ -14,6 +14,7 @@ import UsersPage from "@/pages/admin/UsersPage";
 import UserDetailPage from "@/pages/admin/UserDetailPage";
 import LookupsPage from "@/pages/admin/LookupsPage";
 import AdoptionPage from "@/pages/admin/AdoptionPage";
+import RatingsPage from "@/pages/admin/RatingsPage";
 import LostFoundPage from "@/pages/admin/LostFoundPage";
 import CommunitiesPage from "@/pages/admin/CommunitiesPage";
 import ServiceProvidersPage from "@/pages/admin/ServiceProvidersPage";
@@ -63,6 +64,7 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_COMMUNITY_DETAIL} element={<CommunityDetailPage />} />
           <Route path={ROUTES.ADMIN_SERVICE_PROVIDERS} element={<ServiceProvidersPage />} />
           <Route path={ROUTES.ADMIN_SERVICE_PROVIDER_DETAIL} element={<ServiceProviderDetailPage />} />
+          <Route path={ROUTES.ADMIN_RATINGS} element={<RatingsPage />} />
           <Route path={ROUTES.ADMIN_POSTS} element={<PostsPage />} />
           <Route path={ROUTES.ADMIN_BROADCAST} element={<BroadcastPage />} />
           <Route path={ROUTES.ADMIN_WAITLIST} element={<WaitlistPage />} />

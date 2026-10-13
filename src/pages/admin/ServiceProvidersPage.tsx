@@ -78,6 +78,9 @@ export default function ServiceProvidersPage() {
 
   useEffect(load, [debouncedSearch, categoryId, verified, isVet, page]);
 
+  const categoryName = (id: number | null) =>
+    id == null ? "—" : (categories.find((c) => c.id === id)?.name ?? `#${id}`);
+
   const handleDelete = async () => {
     if (!deleting) return;
     try {
@@ -161,7 +164,7 @@ export default function ServiceProvidersPage() {
               {items.map((p) => (
                 <TR key={p.id}>
                   <TD className="font-medium text-gray-900">{p.name}</TD>
-                  <TD className="text-sm text-gray-600">ID {p.primaryCategoryId}</TD>
+                  <TD className="text-sm text-gray-600">{categoryName(p.primaryCategoryId)}</TD>
                   <TD>
                     <Tag tone={p.isVet ? "blue" : "gray"}>{p.isVet ? "Vet" : "Service"}</Tag>
                   </TD>

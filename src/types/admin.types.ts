@@ -271,6 +271,34 @@ export interface LookupWriteRequest {
   extra?: Record<string, unknown> | null;
 }
 
+export interface LookupImportRowIssue {
+  row: number; // 1-based spreadsheet row (header is row 1)
+  name: string | null;
+  message: string;
+}
+
+// All-or-nothing: when errors is non-empty nothing was written. In a dry run, created is what
+// would be created.
+export interface LookupImportResult {
+  dryRun: boolean;
+  totalRows: number;
+  created: number;
+  skipped: number;
+  columns: string[];
+  errors: LookupImportRowIssue[];
+  skippedRows: LookupImportRowIssue[];
+}
+
+// Columns accepted by POST /admin/lookups/{type}/import (mirrors the API). "name" is always required.
+export const LOOKUP_IMPORT_COLUMNS: Partial<Record<LookupType, { columns: string[]; example: string[] }>> = {
+  species: { columns: ["name", "supportsActivityTracking"], example: ["Dog", "true"] },
+  breeds: { columns: ["name", "speciesName", "origin"], example: ["Beagle", "Dog", "England"] },
+  vaccines: { columns: ["name", "syndicateCode"], example: ["Rabies", "RAB-01"] },
+  medications: { columns: ["name"], example: ["Amoxicillin"] },
+  serviceprovidertypes: { columns: ["name", "slug", "sortOrder"], example: ["Vet Clinic", "veterinary", "1"] },
+  specializations: { columns: ["name"], example: ["Dermatology"] },
+};
+
 // enum-seeded types: rename only, no create/delete
 export const ENUM_SEEDED_LOOKUPS: LookupType[] = [
   "petsizes",
@@ -293,6 +321,50 @@ export interface AdoptionListing {
   statusName: string;
   locationLabel: string | null;
   createdAt: string;
+  requestCount: number;
+  pendingRequestCount: number;
+  oldestPendingRequestAt: string | null;
+}
+
+// Request statuses are StatusCode ids 10-15 (adopter-side lifecycle).
+export const ADOPTION_REQUEST_STATUSES = [
+  { id: 10, label: "Pending" },
+  { id: 11, label: "Approved" },
+  { id: 12, label: "Rejected" },
+  { id: 13, label: "Cancelled" },
+  { id: 14, label: "Completed" },
+  { id: 15, label: "Expired" },
+] as const;
+
+export interface AdoptionRequestItem {
+  id: number;
+  listingId: number | null;
+  petName: string | null;
+  listingStatusId: number | null;
+  listingStatusName: string | null;
+  listerUserId: string | null;
+  listerName: string | null;
+  requesterUserId: string;
+  requesterCode: string;
+  requesterName: string | null;
+  requesterStatus: UserStatus;
+  requesterCreatedAt: string;
+  requesterOpenRequests: number; // pending + approved across all listings
+  statusId: number | null;
+  statusName: string | null;
+  requestedAt: string;
+  listerConfirmedAt: string | null;
+  adopterConfirmedAt: string | null;
+}
+
+export interface AdoptionRequesterStat {
+  userId: string;
+  userCode: string;
+  name: string | null;
+  status: UserStatus;
+  createdAt: string;
+  requests: number;
+  distinctListings: number;
 }
 
 export interface LostFoundReport {
@@ -385,6 +457,8 @@ export const AUDIT_ACTIONS = [
   "lookup.create",
   "lookup.update",
   "lookup.delete",
+  "lookup.import",
+  "rating.delete",
   "adoption.close",
   "lostfound.resolve",
   "lostfound.remove",
@@ -798,4 +872,45 @@ export interface AwsStorageSection {
   classAPercentOfFree: number | null;
   classBPercentOfFree: number | null;
   opsNote: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Provider ratings oversight (stars-only, one per user per provider)
+// ---------------------------------------------------------------------------
+
+export type RatingFlag = "new_account" | "restricted_user";
+
+export interface AdminRatingItem {
+  id: number;
+  providerId: number | null;
+  providerName: string | null;
+  userId: string;
+  userCode: string;
+  userName: string;
+  userStatus: UserStatus;
+  userCreatedAt: string;
+  stars: number;
+  ratedAt: string; // re-rating overwrites, so this is the latest rating time
+  flags: RatingFlag[];
+}
+
+export type RatingSort = "newest" | "oldest" | "stars_asc" | "stars_desc";
+
+export interface AdminRatingProviderStat {
+  providerId: number;
+  name: string;
+  average: number;
+  count: number;
+  last7Days: number;
+  last7DaysAverage: number | null;
+}
+
+export interface AdminRatingSummary {
+  total: number;
+  average: number;
+  distribution: number[]; // index 0 = 1 star
+  last7Days: number;
+  flagged: number;
+  spiking: AdminRatingProviderStat[];
+  lowestRated: AdminRatingProviderStat[];
 }

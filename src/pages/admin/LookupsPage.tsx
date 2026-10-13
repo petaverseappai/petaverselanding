@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Download } from "lucide-react";
 import {
   getLookupTypes,
   getLookupItems,
   createLookup,
   updateLookup,
   deleteLookup,
+  importLookups,
 } from "@/services/admin";
-import type { LookupType, LookupItem, LookupWriteRequest } from "@/types/admin.types";
-import { ENUM_SEEDED_LOOKUPS } from "@/types/admin.types";
+import type {
+  LookupType,
+  LookupItem,
+  LookupWriteRequest,
+  LookupImportResult,
+} from "@/types/admin.types";
+import { ENUM_SEEDED_LOOKUPS, LOOKUP_IMPORT_COLUMNS } from "@/types/admin.types";
 import {
   PageHeader,
   Panel,
@@ -48,6 +54,7 @@ export default function LookupsPage() {
   const [editing, setEditing] = useState<LookupItem | null>(null);
   const [creating, setCreating] = useState(false);
   const [confirmItem, setConfirmItem] = useState<LookupItem | null>(null);
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     getLookupTypes()
@@ -78,6 +85,7 @@ export default function LookupsPage() {
   useEffect(load, [type, debouncedSearch, page]);
 
   const isEnumSeeded = type ? ENUM_SEEDED_LOOKUPS.includes(type) : false;
+  const canImport = type ? LOOKUP_IMPORT_COLUMNS[type] !== undefined : false;
 
   const onDelete = async (item: LookupItem) => {
     if (!type) return;
@@ -97,9 +105,16 @@ export default function LookupsPage() {
         subtitle="Manage master lookup tables."
         actions={
           type && !isEnumSeeded ? (
-            <Button size="sm" onClick={() => setCreating(true)}>
-              <Plus className="h-4 w-4" /> New
-            </Button>
+            <div className="flex gap-2">
+              {canImport && (
+                <Button size="sm" variant="outline" onClick={() => setImporting(true)}>
+                  <Upload className="h-4 w-4" /> Import
+                </Button>
+              )}
+              <Button size="sm" onClick={() => setCreating(true)}>
+                <Plus className="h-4 w-4" /> New
+              </Button>
+            </div>
           ) : null
         }
       />
@@ -213,6 +228,18 @@ export default function LookupsPage() {
         />
       )}
 
+      {type && (
+        <ImportModal
+          open={importing}
+          type={type}
+          onClose={() => setImporting(false)}
+          onImported={() => {
+            setImporting(false);
+            load();
+          }}
+        />
+      )}
+
       <ConfirmModal
         open={confirmItem !== null}
         onClose={() => setConfirmItem(null)}
@@ -310,5 +337,203 @@ function LookupModal({
         </Field>
       </div>
     </Modal>
+  );
+}
+
+function downloadTemplate(type: LookupType) {
+  const spec = LOOKUP_IMPORT_COLUMNS[type];
+  if (!spec) return;
+  const quote = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+  // BOM so Excel opens the file as UTF-8 (Arabic names etc.).
+  const csv =
+    "﻿" + [spec.columns, spec.example].map((r) => r.map(quote).join(",")).join("\r\n") + "\r\n";
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${type}-template.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function ImportModal({
+  open,
+  type,
+  onClose,
+  onImported,
+}: {
+  open: boolean;
+  type: LookupType;
+  onClose: () => void;
+  onImported: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<LookupImportResult | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setFile(null);
+      setPreview(null);
+    }
+  }, [open, type]);
+
+  const spec = LOOKUP_IMPORT_COLUMNS[type];
+
+  // Validate on the server (dry run) as soon as a file is picked, so the admin sees what will happen.
+  const pick = async (f: File | null) => {
+    setFile(f);
+    setPreview(null);
+    if (!f) return;
+    setChecking(true);
+    try {
+      setPreview(await importLookups(type, f, true));
+    } catch (e) {
+      toast.error(errMessage(e, "Could not read the file."));
+      setFile(null);
+      if (inputRef.current) inputRef.current.value = "";
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const confirm = async () => {
+    if (!file) return;
+    setSaving(true);
+    try {
+      const res = await importLookups(type, file, false);
+      if (res.errors.length > 0) {
+        setPreview(res);
+        toast.error("Import failed. Fix the rows listed and try again.");
+        return;
+      }
+      toast.success(
+        `Imported ${res.created} item(s)` + (res.skipped ? `, skipped ${res.skipped}.` : "."),
+      );
+      onImported();
+    } catch (e) {
+      toast.error(errMessage(e, "Import failed."));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const ready = !!preview && preview.errors.length === 0 && preview.created > 0;
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={`Import ${type}`}
+      wide
+      footer={
+        <>
+          <Button variant="outline" size="sm" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button size="sm" onClick={confirm} disabled={!ready || saving || checking}>
+            {saving ? "Importing..." : ready ? `Import ${preview.created} item(s)` : "Import"}
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4 text-sm">
+        <div className="rounded-xl bg-gray-50 p-4 text-gray-600">
+          <p>
+            Upload a <b>.csv</b> or <b>.xlsx</b> file. The first row must be a header with these
+            columns (only <code className="font-mono">name</code> is required):
+          </p>
+          <p className="mt-2 font-mono text-xs text-gray-800">{spec?.columns.join(", ")}</p>
+          {type === "breeds" && (
+            <p className="mt-2 text-xs">
+              Link each breed to a species with <code className="font-mono">speciesName</code>{" "}
+              (e.g. Dog) or <code className="font-mono">speciesId</code>.
+            </p>
+          )}
+          <p className="mt-2 text-xs">
+            Names that already exist are skipped. If any row has an error, nothing is imported.
+          </p>
+          <button
+            type="button"
+            onClick={() => downloadTemplate(type)}
+            className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-paw-orange hover:underline"
+          >
+            <Download className="h-3.5 w-3.5" /> Download CSV template
+          </button>
+        </div>
+
+        <input
+          ref={inputRef}
+          type="file"
+          accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          onChange={(e) => pick(e.target.files?.[0] ?? null)}
+          className="block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-200"
+        />
+
+        {checking && <p className="text-gray-500">Checking file...</p>}
+
+        {preview && (
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              <Tag>{preview.totalRows} row(s)</Tag>
+              {preview.errors.length === 0 ? (
+                <Tag tone="green">{preview.created} to create</Tag>
+              ) : (
+                <Tag tone="red">{preview.errors.length} error(s)</Tag>
+              )}
+              {preview.skipped > 0 && <Tag tone="amber">{preview.skipped} skipped</Tag>}
+            </div>
+            <IssueTable
+              title="Errors (nothing will be imported until these are fixed)"
+              issues={preview.errors}
+              tone="red"
+            />
+            <IssueTable title="Skipped" issues={preview.skippedRows} tone="amber" />
+          </div>
+        )}
+      </div>
+    </Modal>
+  );
+}
+
+function IssueTable({
+  title,
+  issues,
+  tone,
+}: {
+  title: string;
+  issues: LookupImportResult["errors"];
+  tone: "red" | "amber";
+}) {
+  if (issues.length === 0) return null;
+  return (
+    <div>
+      <p
+        className={`mb-1 text-xs font-semibold ${tone === "red" ? "text-red-600" : "text-amber-700"}`}
+      >
+        {title}
+      </p>
+      <div className="max-h-56 overflow-y-auto rounded-xl border border-gray-100">
+        <Table>
+          <THead>
+            <TR>
+              <TH className="w-20">Row</TH>
+              <TH>Name</TH>
+              <TH>Reason</TH>
+            </TR>
+          </THead>
+          <TBody>
+            {issues.map((i) => (
+              <TR key={`${i.row}-${i.message}`}>
+                <TD className="text-gray-400">{i.row}</TD>
+                <TD>{i.name ?? "—"}</TD>
+                <TD className="text-gray-600">{i.message}</TD>
+              </TR>
+            ))}
+          </TBody>
+        </Table>
+      </div>
+    </div>
   );
 }

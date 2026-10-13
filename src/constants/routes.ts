@@ -30,6 +30,7 @@ export const ROUTES = {
   ADMIN_LEGAL: "/admin/legal",
   ADMIN_SERVICE_PROVIDERS: "/admin/service-providers",
   ADMIN_SERVICE_PROVIDER_DETAIL: "/admin/service-providers/:id",
+  ADMIN_RATINGS: "/admin/ratings",
   ADMIN_OTP: "/admin/otp",
   ADMIN_AWS: "/admin/aws",
 } as const;

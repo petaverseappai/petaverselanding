@@ -98,11 +98,17 @@ export function TR({
 export function TD({
   children,
   className,
+  colSpan,
 }: {
   children?: React.ReactNode;
   className?: string;
+  colSpan?: number;
 }) {
-  return <td className={cn("px-6 py-3 text-gray-700", className)}>{children}</td>;
+  return (
+    <td colSpan={colSpan} className={cn("px-6 py-3 text-gray-700", className)}>
+      {children}
+    </td>
+  );
 }
 
 // ---------------------------------------------------------------------------
