@@ -722,6 +722,35 @@ export interface LegalVersionEntry {
 }
 
 // ---------------------------------------------------------------------------
+// Vision Profiles (§16)
+// ---------------------------------------------------------------------------
+
+export interface VisionProfile {
+  id: number;
+  speciesId: number;
+  speciesName: string;
+  version: number;
+  colorMatrix: number[][];
+  brightness: number;
+  contrast: number;
+  saturation: number;
+  description: string;
+  funFact: string;
+  isActive: boolean;
+}
+
+export interface VisionProfileWrite {
+  speciesId: number;
+  colorMatrix: number[][];
+  brightness: number;
+  contrast: number;
+  saturation: number;
+  description: string;
+  funFact: string;
+  isActive: boolean;
+}
+
+// ---------------------------------------------------------------------------
 // AWS Operations Dashboard (§15)
 // ---------------------------------------------------------------------------
 

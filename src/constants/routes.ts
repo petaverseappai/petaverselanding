@@ -36,6 +36,8 @@ export const ROUTES = {
   ADMIN_SERVICE_PROVIDER_DETAIL: "/admin/service-providers/:id",
   ADMIN_OTP: "/admin/otp",
   ADMIN_AWS: "/admin/aws",
+  ADMIN_VISION_PROFILES: "/admin/vision-profiles",
+  ADMIN_VISION_PROFILE_DETAIL: "/admin/vision-profiles/:id",
 } as const;
 
 // Helpers for building parameterized paths
@@ -44,6 +46,7 @@ export const adminPaths = {
   userDetail: (id: string) => `/admin/users/${id}`,
   communityDetail: (id: number | string) => `/admin/communities/${id}`,
   serviceProviderDetail: (id: number | string) => `/admin/service-providers/${id}`,
+  visionProfileDetail: (id: number | string) => `/admin/vision-profiles/${id}`,
 };
 
 export const portalPaths = {};

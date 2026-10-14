@@ -31,6 +31,8 @@ import SecurityPage from "@/pages/admin/SecurityPage";
 import LegalPage from "@/pages/admin/LegalPage";
 import OtpDashboardPage from "@/pages/admin/OtpDashboardPage";
 import AwsDashboardPage from "@/pages/admin/AwsDashboardPage";
+import VisionProfilesPage from "@/pages/admin/VisionProfilesPage";
+import VisionProfileDetailPage from "@/pages/admin/VisionProfileDetailPage";
 import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalProtectedRoute } from "@/components/portal/PortalProtectedRoute";
@@ -79,6 +81,8 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_ANALYTICS} element={<AnalyticsPage />} />
           <Route path={ROUTES.ADMIN_SECURITY} element={<SecurityPage />} />
           <Route path={ROUTES.ADMIN_LEGAL} element={<LegalPage />} />
+          <Route path={ROUTES.ADMIN_VISION_PROFILES} element={<VisionProfilesPage />} />
+          <Route path={ROUTES.ADMIN_VISION_PROFILE_DETAIL} element={<VisionProfileDetailPage />} />
         </Route>
         <Route path={ROUTES.PORTAL_LOGIN} element={<PortalLoginPage />} />
         <Route

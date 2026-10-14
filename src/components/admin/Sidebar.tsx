@@ -20,6 +20,7 @@ import {
   MessageSquare,
   Scale,
   Cloud,
+  Eye,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ROUTES } from "@/constants/routes";
@@ -50,6 +51,7 @@ const GROUPS: NavGroup[] = [
       { label: "Lost & Found", icon: Search, to: ROUTES.ADMIN_LOSTFOUND },
       { label: "Communities", icon: Users2, to: ROUTES.ADMIN_COMMUNITIES },
       { label: "Service Providers", icon: Stethoscope, to: ROUTES.ADMIN_SERVICE_PROVIDERS },
+      { label: "Vision Profiles", icon: Eye, to: ROUTES.ADMIN_VISION_PROFILES },
       { label: "Posts", icon: FileText, to: ROUTES.ADMIN_POSTS },
     ],
   },

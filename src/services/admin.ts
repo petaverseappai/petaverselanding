@@ -51,10 +51,13 @@ import type {
   OtpProviderBalance,
   LegalVersionEntry,
   AwsDashboard,
+  VisionProfile,
+  VisionProfileWrite,
 } from "@/types/admin.types";
 
 // Re-export types used in service provider pages
 export type { LookupItem };
+export type { VisionProfile, VisionProfileWrite };
 export type {
   ServiceProviderListItem,
   ServiceProviderDetail,
@@ -725,6 +728,34 @@ export async function publishLegalVersion(body: {
 
 export async function invalidateLegalCache(documentType: string): Promise<void> {
   await api.post(`/legal/admin/invalidate-cache`, null, { params: { documentType } });
+}
+
+// ---------------------------------------------------------------------------
+// Vision Profiles (§16)
+// ---------------------------------------------------------------------------
+
+export async function getVisionProfiles(): Promise<VisionProfile[]> {
+  const { data } = await api.get<VisionProfile[]>("/admin/vision-profiles");
+  return data;
+}
+
+export async function getVisionProfile(id: number): Promise<VisionProfile> {
+  const { data } = await api.get<VisionProfile>(`/admin/vision-profiles/${id}`);
+  return data;
+}
+
+export async function createVisionProfile(body: VisionProfileWrite): Promise<VisionProfile> {
+  const { data } = await api.post<VisionProfile>("/admin/vision-profiles", body);
+  return data;
+}
+
+export async function updateVisionProfile(id: number, body: VisionProfileWrite): Promise<VisionProfile> {
+  const { data } = await api.put<VisionProfile>(`/admin/vision-profiles/${id}`, body);
+  return data;
+}
+
+export async function deleteVisionProfile(id: number): Promise<void> {
+  await api.delete(`/admin/vision-profiles/${id}`);
 }
 
 // ---------------------------------------------------------------------------
