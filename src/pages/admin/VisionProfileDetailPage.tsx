@@ -196,7 +196,7 @@ export default function VisionProfileDetailPage() {
               <Checkbox
                 id="isActive"
                 checked={form.isActive}
-                onCheckedChange={(v) => set("isActive", Boolean(v))}
+                onChange={(e) => set("isActive", e.target.checked)}
               />
               <label htmlFor="isActive" className="text-sm text-gray-700 cursor-pointer">
                 Active
