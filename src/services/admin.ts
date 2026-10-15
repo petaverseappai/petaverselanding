@@ -58,10 +58,13 @@ import type {
   AdminRatingSummary,
   RatingFlag,
   RatingSort,
+  VisionProfile,
+  VisionProfileWrite,
 } from "@/types/admin.types";
 
 // Re-export types used in service provider pages
 export type { LookupItem };
+export type { VisionProfile, VisionProfileWrite };
 export type {
   ServiceProviderListItem,
   ServiceProviderDetail,
@@ -77,6 +80,11 @@ export type {
 
 export async function adminLogin(email: string, password: string): Promise<AuthResponse> {
   const { data } = await api.post<AuthResponse>("/auth/admin-login", { email, password });
+  return data;
+}
+
+export async function providerLogin(email: string, password: string): Promise<AuthResponse> {
+  const { data } = await api.post<AuthResponse>("/auth/provider-login", { email, password });
   return data;
 }
 
@@ -622,6 +630,46 @@ export async function deleteServiceProvider(id: number): Promise<void> {
   await api.delete(`/admin/service-providers/${id}`);
 }
 
+export async function inviteServiceProvider(id: number, email: string): Promise<void> {
+  await api.post(`/admin/service-providers/${id}/invite`, { email });
+}
+
+export async function verifyServiceProvider(id: number, detail: ServiceProviderDetail): Promise<ServiceProviderDetail> {
+  const { data } = await api.put<ServiceProviderDetail>(`/admin/service-providers/${id}`, {
+    name: detail.name,
+    description: detail.description,
+    isVerified: true,
+    isVet: detail.isVet,
+    logoUrl: detail.logoUrl,
+    appUserId: detail.appUserId,
+    branches: detail.branches,
+    categories: detail.categories,
+    serviceIds: detail.serviceIds,
+    speciesIds: detail.speciesIds,
+    specializations: detail.specializations,
+    hours: detail.hours,
+  });
+  return data;
+}
+
+export async function unverifyServiceProvider(id: number, detail: ServiceProviderDetail): Promise<ServiceProviderDetail> {
+  const { data } = await api.put<ServiceProviderDetail>(`/admin/service-providers/${id}`, {
+    name: detail.name,
+    description: detail.description,
+    isVerified: false,
+    isVet: detail.isVet,
+    logoUrl: detail.logoUrl,
+    appUserId: detail.appUserId,
+    branches: detail.branches,
+    categories: detail.categories,
+    serviceIds: detail.serviceIds,
+    speciesIds: detail.speciesIds,
+    specializations: detail.specializations,
+    hours: detail.hours,
+  });
+  return data;
+}
+
 // ---------------------------------------------------------------------------
 // Lookups for Service Provider forms
 // ---------------------------------------------------------------------------
@@ -731,6 +779,34 @@ export async function publishLegalVersion(body: {
 
 export async function invalidateLegalCache(documentType: string): Promise<void> {
   await api.post(`/legal/admin/invalidate-cache`, null, { params: { documentType } });
+}
+
+// ---------------------------------------------------------------------------
+// Vision Profiles (§16)
+// ---------------------------------------------------------------------------
+
+export async function getVisionProfiles(): Promise<VisionProfile[]> {
+  const { data } = await api.get<VisionProfile[]>("/admin/vision-profiles");
+  return data;
+}
+
+export async function getVisionProfile(id: number): Promise<VisionProfile> {
+  const { data } = await api.get<VisionProfile>(`/admin/vision-profiles/${id}`);
+  return data;
+}
+
+export async function createVisionProfile(body: VisionProfileWrite): Promise<VisionProfile> {
+  const { data } = await api.post<VisionProfile>("/admin/vision-profiles", body);
+  return data;
+}
+
+export async function updateVisionProfile(id: number, body: VisionProfileWrite): Promise<VisionProfile> {
+  const { data } = await api.put<VisionProfile>(`/admin/vision-profiles/${id}`, body);
+  return data;
+}
+
+export async function deleteVisionProfile(id: number): Promise<void> {
+  await api.delete(`/admin/vision-profiles/${id}`);
 }
 
 // ---------------------------------------------------------------------------

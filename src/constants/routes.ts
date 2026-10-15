@@ -9,6 +9,10 @@ export const ROUTES = {
   ADMIN: "/admin",
   ADMIN_LOGIN: "/admin/login",
 
+  PORTAL: "/portal",
+  PORTAL_LOGIN: "/portal/login",
+  PORTAL_DASHBOARD: "/portal/dashboard",
+
   // Dashboard is the index (ADMIN)
   ADMIN_MODERATION: "/admin/moderation",
   ADMIN_MODERATION_DETAIL: "/admin/moderation/:id",
@@ -33,6 +37,8 @@ export const ROUTES = {
   ADMIN_RATINGS: "/admin/ratings",
   ADMIN_OTP: "/admin/otp",
   ADMIN_AWS: "/admin/aws",
+  ADMIN_VISION_PROFILES: "/admin/vision-profiles",
+  ADMIN_VISION_PROFILE_DETAIL: "/admin/vision-profiles/:id",
 } as const;
 
 // Helpers for building parameterized paths
@@ -41,7 +47,10 @@ export const adminPaths = {
   userDetail: (id: string) => `/admin/users/${id}`,
   communityDetail: (id: number | string) => `/admin/communities/${id}`,
   serviceProviderDetail: (id: number | string) => `/admin/service-providers/${id}`,
+  visionProfileDetail: (id: number | string) => `/admin/vision-profiles/${id}`,
 };
+
+export const portalPaths = {};
 
 export const sharePaths = {
   post: (id: string | number) => `/p/${id}`,

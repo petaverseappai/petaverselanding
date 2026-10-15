@@ -775,6 +775,10 @@ export interface ServiceProviderDetail extends ServiceProviderWrite {
   createdAt: string;
   rating: number;
   reviewCount: number;
+  appUserId: string | null;
+  pageId: number | null;
+  pageHandle: string | null;
+  lastLoginAt: string | null;
 }
 
 export interface LegalVersionEntry {
@@ -789,6 +793,35 @@ export interface LegalVersionEntry {
   effectiveAt: string | null;
   createdAt: string;
   isCurrent: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Vision Profiles (§16)
+// ---------------------------------------------------------------------------
+
+export interface VisionProfile {
+  id: number;
+  speciesId: number;
+  speciesName: string;
+  version: number;
+  colorMatrix: number[][];
+  brightness: number;
+  contrast: number;
+  saturation: number;
+  description: string;
+  funFact: string;
+  isActive: boolean;
+}
+
+export interface VisionProfileWrite {
+  speciesId: number;
+  colorMatrix: number[][];
+  brightness: number;
+  contrast: number;
+  saturation: number;
+  description: string;
+  funFact: string;
+  isActive: boolean;
 }
 
 // ---------------------------------------------------------------------------

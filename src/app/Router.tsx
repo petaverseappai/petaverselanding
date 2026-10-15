@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import LandingPage from "@/pages/landing/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -32,8 +32,14 @@ import SecurityPage from "@/pages/admin/SecurityPage";
 import LegalPage from "@/pages/admin/LegalPage";
 import OtpDashboardPage from "@/pages/admin/OtpDashboardPage";
 import AwsDashboardPage from "@/pages/admin/AwsDashboardPage";
+import VisionProfilesPage from "@/pages/admin/VisionProfilesPage";
+import VisionProfileDetailPage from "@/pages/admin/VisionProfileDetailPage";
 import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { PortalProtectedRoute } from "@/components/portal/PortalProtectedRoute";
+import { PortalLayout } from "@/components/portal/PortalLayout";
+import PortalLoginPage from "@/pages/portal/LoginPage";
+import PortalDashboardPage from "@/pages/portal/DashboardPage";
 
 export function AppRouter() {
   return (
@@ -77,6 +83,19 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_ANALYTICS} element={<AnalyticsPage />} />
           <Route path={ROUTES.ADMIN_SECURITY} element={<SecurityPage />} />
           <Route path={ROUTES.ADMIN_LEGAL} element={<LegalPage />} />
+          <Route path={ROUTES.ADMIN_VISION_PROFILES} element={<VisionProfilesPage />} />
+          <Route path={ROUTES.ADMIN_VISION_PROFILE_DETAIL} element={<VisionProfileDetailPage />} />
+        </Route>
+        <Route path={ROUTES.PORTAL_LOGIN} element={<PortalLoginPage />} />
+        <Route
+          element={
+            <PortalProtectedRoute>
+              <PortalLayout />
+            </PortalProtectedRoute>
+          }
+        >
+          <Route path={ROUTES.PORTAL} element={<Navigate to={ROUTES.PORTAL_DASHBOARD} replace />} />
+          <Route path={ROUTES.PORTAL_DASHBOARD} element={<PortalDashboardPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

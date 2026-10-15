@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
-import { ArrowLeft, Upload, X, Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { ArrowLeft, Upload, X, Plus, Trash2, ChevronUp, ChevronDown, ExternalLink, Mail, ShieldCheck, ShieldOff } from "lucide-react";
 import {
   getServiceProvider,
   createServiceProvider,
   updateServiceProvider,
+  inviteServiceProvider,
+  verifyServiceProvider,
+  unverifyServiceProvider,
   getCategories,
   getLookupsByType,
   getUploadUrl,
   confirmUpload,
 } from "@/services/admin";
 import type {
+  ServiceProviderDetail,
   ServiceProviderWrite,
   ServiceProviderHour,
   ServiceProviderBranch,
@@ -474,7 +478,11 @@ export default function ServiceProviderDetailPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadingBranchIdx, setUploadingBranchIdx] = useState<number | null>(null);
+  const [inviting, setInviting] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [verifying, setVerifying] = useState(false);
 
+  const [detail, setDetail] = useState<ServiceProviderDetail | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [services, setServices] = useState<LookupItem[]>([]);
   const [species, setSpecies] = useState<LookupItem[]>([]);
@@ -508,29 +516,32 @@ export default function ServiceProviderDetailPage() {
       .catch((e) => toast.error(errMessage(e, "Failed to load lookups.")));
   }, []);
 
+  const loadDetail = (numericId: number) => {
+    setLoading(true);
+    return getServiceProvider(numericId)
+      .then((p) => {
+        setDetail(p);
+        setFormData({
+          name: p.name,
+          description: p.description,
+          isVerified: p.isVerified,
+          isVet: p.isVet,
+          logoUrl: p.logoUrl,
+          appUserId: p.appUserId,
+          branches: p.branches,
+          categories: p.categories,
+          serviceIds: p.serviceIds,
+          speciesIds: p.speciesIds,
+          specializations: p.specializations,
+          hours: p.hours,
+        });
+      })
+      .catch((e) => toast.error(errMessage(e, "Failed to load provider.")))
+      .finally(() => setLoading(false));
+  };
+
   useEffect(() => {
-    if (!isNew && id) {
-      setLoading(true);
-      getServiceProvider(Number(id))
-        .then((p) => {
-          setFormData({
-            name: p.name,
-            description: p.description,
-            isVerified: p.isVerified,
-            isVet: p.isVet,
-            logoUrl: p.logoUrl,
-            appUserId: p.appUserId,
-            branches: p.branches,
-            categories: p.categories,
-            serviceIds: p.serviceIds,
-            speciesIds: p.speciesIds,
-            specializations: p.specializations,
-            hours: p.hours,
-          });
-        })
-        .catch((e) => toast.error(errMessage(e, "Failed to load provider.")))
-        .finally(() => setLoading(false));
-    }
+    if (!isNew && id) loadDetail(Number(id));
   }, [id, isNew]);
 
   const handleLogoUpload = async (file: File) => {
@@ -622,6 +633,38 @@ export default function ServiceProviderDetailPage() {
       ...prev,
       speciesIds: checked ? [...prev.speciesIds, spId] : prev.speciesIds.filter((x) => x !== spId),
     }));
+  };
+
+  const handleInvite = async () => {
+    if (!inviteEmail.trim() || !id) return;
+    setInviting(true);
+    try {
+      await inviteServiceProvider(Number(id), inviteEmail.trim());
+      toast.success("Invitation sent.");
+      setInviteEmail("");
+      await loadDetail(Number(id));
+    } catch (e) {
+      toast.error(errMessage(e, "Failed to send invitation."));
+    } finally {
+      setInviting(false);
+    }
+  };
+
+  const handleVerifyToggle = async () => {
+    if (!detail || !id) return;
+    setVerifying(true);
+    try {
+      const updated = detail.isVerified
+        ? await unverifyServiceProvider(Number(id), detail)
+        : await verifyServiceProvider(Number(id), detail);
+      setDetail(updated);
+      setFormData((prev) => ({ ...prev, isVerified: updated.isVerified }));
+      toast.success(updated.isVerified ? "Provider verified." : "Verification removed.");
+    } catch (e) {
+      toast.error(errMessage(e, "Failed to update verification."));
+    } finally {
+      setVerifying(false);
+    }
   };
 
   const handleSave = async () => {
@@ -785,21 +828,116 @@ export default function ServiceProviderDetailPage() {
         {/* ── Right column: flags + classification ── */}
         <div className="space-y-6">
 
+          {!isNew && detail && (
+            <Panel className="p-6">
+              <h3 className="mb-4 text-sm font-semibold text-gray-900">Account</h3>
+              <div className="space-y-4">
+
+                {/* Invite status */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Portal access</p>
+                    <p className="text-xs text-gray-400">Service provider login status</p>
+                  </div>
+                  {detail.appUserId === null ? (
+                    <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-500">
+                      Not invited
+                    </span>
+                  ) : detail.lastLoginAt === null ? (
+                    <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                      Invited
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                      Active
+                    </span>
+                  )}
+                </div>
+
+                {/* Invite form — only shown when not yet invited */}
+                {detail.appUserId === null && (
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleInvite(); } }}
+                      placeholder="Email address"
+                      className="min-w-0 flex-1 rounded-xl border border-border bg-muted px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:border-paw-orange focus:outline-none focus:ring-1 focus:ring-paw-orange"
+                    />
+                    <Button size="sm" onClick={handleInvite} disabled={inviting || !inviteEmail.trim()}>
+                      <Mail className="h-3.5 w-3.5" />
+                      {inviting ? "Sending..." : "Invite"}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Page linkout */}
+                {detail.pageId !== null && (
+                  <>
+                    <div className="h-px bg-border" />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">Provider page</p>
+                        <p className="text-xs text-gray-400">@{detail.pageHandle}</p>
+                      </div>
+                      <a
+                        href={`/pages/${detail.pageHandle}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-muted px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-white hover:border-paw-orange transition-colors"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        View page
+                      </a>
+                    </div>
+                  </>
+                )}
+
+                {/* Verify toggle */}
+                <div className="h-px bg-border" />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Verified</p>
+                    <p className="text-xs text-gray-400">Show verified badge in app</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleVerifyToggle}
+                    disabled={verifying}
+                    className={detail.isVerified ? "border-red-200 text-red-600 hover:bg-red-50" : "border-green-200 text-green-700 hover:bg-green-50"}
+                  >
+                    {detail.isVerified
+                      ? <><ShieldOff className="h-3.5 w-3.5" /> Unverify</>
+                      : <><ShieldCheck className="h-3.5 w-3.5" /> Verify</>
+                    }
+                  </Button>
+                </div>
+
+              </div>
+            </Panel>
+          )}
+
           <Panel className="p-6">
             <h3 className="mb-4 text-sm font-semibold text-gray-900">Settings</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Verified</p>
-                  <p className="text-xs text-gray-400">Show verified badge in app</p>
-                </div>
-                <Toggle
-                  value={formData.isVerified}
-                  onChange={(v) => setFormData((prev) => ({ ...prev, isVerified: v }))}
-                  label="Verified"
-                />
-              </div>
-              <div className="h-px bg-border" />
+              {isNew && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Verified</p>
+                      <p className="text-xs text-gray-400">Show verified badge in app</p>
+                    </div>
+                    <Toggle
+                      value={formData.isVerified}
+                      onChange={(v) => setFormData((prev) => ({ ...prev, isVerified: v }))}
+                      label="Verified"
+                    />
+                  </div>
+                  <div className="h-px bg-border" />
+                </>
+              )}
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-700">Veterinarian</p>
