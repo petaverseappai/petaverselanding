@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { loginSchema, type LoginFormValues } from "@/types/auth.types";
-import { adminLogin } from "@/services/admin";
+import { providerLogin } from "@/services/admin";
 import { usePortalAuth } from "@/context/PortalAuthContext";
 import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ export default function PortalLoginPage() {
 
   const onSubmit = async (values: LoginFormValues) => {
     try {
-      const data = await adminLogin(values.email, values.password);
+      const data = await providerLogin(values.email, values.password);
 
       if (!data.roles.includes("ServiceProvider")) {
         toast.error("Access denied.");

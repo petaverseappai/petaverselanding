@@ -76,6 +76,11 @@ export async function adminLogin(email: string, password: string): Promise<AuthR
   return data;
 }
 
+export async function providerLogin(email: string, password: string): Promise<AuthResponse> {
+  const { data } = await api.post<AuthResponse>("/auth/provider-login", { email, password });
+  return data;
+}
+
 export async function changePassword(
   oldPassword: string,
   newPassword: string,
