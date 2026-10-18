@@ -38,7 +38,15 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalProtectedRoute } from "@/components/portal/PortalProtectedRoute";
 import { PortalLayout } from "@/components/portal/PortalLayout";
 import PortalLoginPage from "@/pages/portal/LoginPage";
+import PortalNoPagePage from "@/pages/portal/NoPagePage";
 import PortalDashboardPage from "@/pages/portal/DashboardPage";
+import PortalSettingsPage from "@/pages/portal/SettingsPage";
+import PortalPostsPage from "@/pages/portal/PostsPage";
+import PortalCreatePostPage from "@/pages/portal/CreatePostPage";
+import PortalCreatePostWithListingPage from "@/pages/portal/CreatePostWithListingPage";
+import PortalListingsPage from "@/pages/portal/ListingsPage";
+import PortalCreateListingPage from "@/pages/portal/CreateListingPage";
+import PortalListingDetailPage from "@/pages/portal/ListingDetailPage";
 
 export function AppRouter() {
   return (
@@ -85,6 +93,7 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_VISION_PROFILE_DETAIL} element={<VisionProfileDetailPage />} />
         </Route>
         <Route path={ROUTES.PORTAL_LOGIN} element={<PortalLoginPage />} />
+        <Route path={ROUTES.PORTAL_NO_PAGE} element={<PortalNoPagePage />} />
         <Route
           element={
             <PortalProtectedRoute>
@@ -94,6 +103,13 @@ export function AppRouter() {
         >
           <Route path={ROUTES.PORTAL} element={<Navigate to={ROUTES.PORTAL_DASHBOARD} replace />} />
           <Route path={ROUTES.PORTAL_DASHBOARD} element={<PortalDashboardPage />} />
+          <Route path={ROUTES.PORTAL_SETTINGS} element={<PortalSettingsPage />} />
+          <Route path={ROUTES.PORTAL_POSTS} element={<PortalPostsPage />} />
+          <Route path={ROUTES.PORTAL_POSTS_NEW} element={<PortalCreatePostPage />} />
+          <Route path={ROUTES.PORTAL_POSTS_NEW_WITH_LISTING} element={<PortalCreatePostWithListingPage />} />
+          <Route path={ROUTES.PORTAL_LISTINGS} element={<PortalListingsPage />} />
+          <Route path={ROUTES.PORTAL_LISTINGS_NEW} element={<PortalCreateListingPage />} />
+          <Route path={ROUTES.PORTAL_LISTING_DETAIL} element={<PortalListingDetailPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

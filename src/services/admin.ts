@@ -1,4 +1,5 @@
 import { api } from "@/services/axios";
+import { MediaCategory } from "@/constants/mediaCategory";
 import type { AuthResponse } from "@/types/auth.types";
 import type {
   PagedResult,
@@ -53,6 +54,9 @@ import type {
   AwsDashboard,
   VisionProfile,
   VisionProfileWrite,
+  PageListItem,
+  PageDetail,
+  PageWrite,
 } from "@/types/admin.types";
 
 // Re-export types used in service provider pages
@@ -669,7 +673,7 @@ export async function getUploadUrl(
   fileName: string,
 ): Promise<UploadUrlResponse> {
   const { data } = await api.post<UploadUrlResponse>("/media/upload-url", {
-    category: 9, // ProviderLogo
+    category: MediaCategory.ProviderLogo,
     contentType,
     fileName,
   });
@@ -772,4 +776,36 @@ export async function getAwsDashboard(includeCost = false): Promise<AwsDashboard
     params: { includeCost },
   });
   return data;
+}
+
+// ---------------------------------------------------------------------------
+// Pages (§17)
+// ---------------------------------------------------------------------------
+
+export type { PageListItem, PageDetail, PageWrite };
+
+export async function getPages(query: {
+  page?: number;
+  limit?: number;
+} = {}): Promise<PagedResult<PageListItem>> {
+  const { data } = await api.get<PagedResult<PageListItem>>("/admin/pages", {
+    params: params(query),
+  });
+  return data;
+}
+
+export async function createPage(body: PageWrite): Promise<PageDetail> {
+  const { data } = await api.post<PageDetail>("/admin/pages", body);
+  return data;
+}
+
+export async function verifyPage(id: number, verified: boolean): Promise<PageDetail> {
+  const { data } = await api.put<PageDetail>(`/admin/pages/${id}/verify`, null, {
+    params: { verified },
+  });
+  return data;
+}
+
+export async function deletePage(id: number): Promise<void> {
+  await api.delete(`/admin/pages/${id}`);
 }

@@ -751,6 +751,34 @@ export interface VisionProfileWrite {
 }
 
 // ---------------------------------------------------------------------------
+// Pages (§17)
+// ---------------------------------------------------------------------------
+
+export interface PageListItem {
+  id: number;
+  handle: string;
+  name: string;
+  isVerified: boolean;
+  ownerServiceProviderId: number | null;
+  createdAt: string;
+}
+
+export interface PageDetail extends PageListItem {
+  description: string | null;
+  logoUrl: string | null;
+  coverUrl: string | null;
+}
+
+export interface PageWrite {
+  handle: string;
+  name: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  coverUrl?: string | null;
+  ownerServiceProviderId?: number | null;
+}
+
+// ---------------------------------------------------------------------------
 // AWS Operations Dashboard (§15)
 // ---------------------------------------------------------------------------
 

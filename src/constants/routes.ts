@@ -11,7 +11,15 @@ export const ROUTES = {
 
   PORTAL: "/portal",
   PORTAL_LOGIN: "/portal/login",
+  PORTAL_NO_PAGE: "/portal/no-page",
   PORTAL_DASHBOARD: "/portal/dashboard",
+  PORTAL_SETTINGS: "/portal/settings",
+  PORTAL_POSTS: "/portal/posts",
+  PORTAL_POSTS_NEW: "/portal/posts/new",
+  PORTAL_POSTS_NEW_WITH_LISTING: "/portal/posts/new-with-listing",
+  PORTAL_LISTINGS: "/portal/listings",
+  PORTAL_LISTINGS_NEW: "/portal/listings/new",
+  PORTAL_LISTING_DETAIL: "/portal/listings/:listingId",
 
   // Dashboard is the index (ADMIN)
   ADMIN_MODERATION: "/admin/moderation",
@@ -49,7 +57,9 @@ export const adminPaths = {
   visionProfileDetail: (id: number | string) => `/admin/vision-profiles/${id}`,
 };
 
-export const portalPaths = {};
+export const portalPaths = {
+  listingDetail: (listingId: number | string) => `/portal/listings/${listingId}`,
+};
 
 export const sharePaths = {
   post: (id: string | number) => `/p/${id}`,

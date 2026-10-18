@@ -4,13 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { loginSchema, type LoginFormValues } from "@/types/auth.types";
 import { providerLogin } from "@/services/admin";
+import { getMyPage } from "@/services/portal";
 import { usePortalAuth } from "@/context/PortalAuthContext";
+import { usePortalPage } from "@/context/PortalPageContext";
 import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function PortalLoginPage() {
   const { login } = usePortalAuth();
+  const { setPage } = usePortalPage();
   const navigate = useNavigate();
 
   const {
@@ -29,7 +32,19 @@ export default function PortalLoginPage() {
       }
 
       login(data.accessToken);
-      navigate(ROUTES.PORTAL_DASHBOARD, { replace: true });
+
+      try {
+        const page = await getMyPage();
+        setPage(page);
+        navigate(ROUTES.PORTAL_DASHBOARD, { replace: true });
+      } catch (err: unknown) {
+        const status = (err as { response?: { status?: number } })?.response?.status;
+        if (status === 404) {
+          navigate(ROUTES.PORTAL_NO_PAGE, { replace: true });
+        } else {
+          throw err;
+        }
+      }
     } catch {
       toast.error("Invalid credentials.");
     }
