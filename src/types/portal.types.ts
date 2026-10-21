@@ -33,6 +33,12 @@ export interface PageUpdateRequest {
   bannerAssetId?: string | null;
 }
 
+export interface HandleAvailability {
+  handle: string;
+  available: boolean;
+  reason: string | null;
+}
+
 // ---------------------------------------------------------------------------
 // Dashboard
 // ---------------------------------------------------------------------------

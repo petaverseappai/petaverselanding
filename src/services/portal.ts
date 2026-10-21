@@ -3,6 +3,7 @@ import { MediaCategory } from "@/constants/mediaCategory";
 import type {
   MyPage,
   PageUpdateRequest,
+  HandleAvailability,
   PageDashboard,
   PostFeedResult,
   CreatePostRequest,
@@ -31,6 +32,17 @@ export async function getPage(pageId: number): Promise<MyPage> {
 
 export async function updatePage(pageId: number, body: PageUpdateRequest): Promise<MyPage> {
   const { data } = await portalApi.put<MyPage>(`/pages/${pageId}`, body);
+  return data;
+}
+
+export async function checkHandleAvailable(
+  handle: string,
+  signal?: AbortSignal,
+): Promise<HandleAvailability> {
+  const { data } = await portalApi.get<HandleAvailability>("/pages/handle-available", {
+    params: { handle },
+    signal,
+  });
   return data;
 }
 

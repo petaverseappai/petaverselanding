@@ -132,10 +132,19 @@ export function FormDivider() {
 export function InputWithPrefix({
   prefix,
   className,
+  wrapperClassName,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { prefix: string }) {
+}: React.InputHTMLAttributes<HTMLInputElement> & {
+  prefix: string;
+  wrapperClassName?: string;
+}) {
   return (
-    <div className="flex h-11 w-full items-center rounded-2xl border border-input bg-background px-4 focus-within:ring-2 focus-within:ring-ring">
+    <div
+      className={cn(
+        "flex h-11 w-full items-center rounded-2xl border border-input bg-background px-4 focus-within:ring-2 focus-within:ring-ring",
+        wrapperClassName,
+      )}
+    >
       <span className="shrink-0 select-none text-sm text-gray-400 pr-0.5">{prefix}</span>
       <input
         className={cn(

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { getPage, updatePage, uploadMedia } from "@/services/portal";
+import { getPage, updatePage, uploadMedia, checkHandleAvailable } from "@/services/portal";
 import { MediaCategory } from "@/constants/mediaCategory";
 import { usePageId, usePortalPage } from "@/context/PortalPageContext";
 import { PageHeader, Panel } from "@/components/admin/ui";
@@ -14,6 +14,7 @@ import {
   FormDivider,
   InputWithPrefix,
 } from "@/components/portal/ui";
+import { cn } from "@/lib/utils";
 import type { MyPage } from "@/types/portal.types";
 
 export default function PortalSettingsPage() {
@@ -26,6 +27,10 @@ export default function PortalSettingsPage() {
 
   const [name, setName] = useState("");
   const [handle, setHandle] = useState("");
+  const [handleStatus, setHandleStatus] = useState<
+    "idle" | "checking" | "available" | "taken"
+  >("idle");
+  const savedHandle = useRef("");
   const [bio, setBio] = useState("");
   const [website, setWebsite] = useState("");
   const [phone, setPhone] = useState("");
@@ -40,6 +45,7 @@ export default function PortalSettingsPage() {
         setLocal(p);
         setName(p.name);
         setHandle(p.handle);
+        savedHandle.current = p.handle;
         setBio(p.bio ?? "");
         setWebsite(p.website ?? "");
         setPhone(p.phone ?? "");
@@ -48,6 +54,30 @@ export default function PortalSettingsPage() {
       })
       .catch(() => toast.error("Failed to load page settings."));
   }, [pageId]);
+
+  // Debounced handle-availability check. The provider's current handle is
+  // always fine, so we skip the call (and clear any status) when unchanged.
+  useEffect(() => {
+    const trimmed = handle.trim();
+    if (!trimmed || trimmed === savedHandle.current) {
+      setHandleStatus("idle");
+      return;
+    }
+    setHandleStatus("checking");
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      checkHandleAvailable(trimmed, controller.signal)
+        .then((res) => setHandleStatus(res.available ? "available" : "taken"))
+        .catch(() => {
+          if (controller.signal.aborted) return;
+          setHandleStatus("idle");
+        });
+    }, 300);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [handle]);
 
   const handleBannerFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,6 +100,10 @@ export default function PortalSettingsPage() {
     e.preventDefault();
     if (!name.trim() || !handle.trim()) {
       toast.error("Name and handle are required.");
+      return;
+    }
+    if (handleStatus === "taken") {
+      toast.error("That handle is taken. Please choose another.");
       return;
     }
     setSaving(true);
@@ -161,13 +195,32 @@ export default function PortalSettingsPage() {
                   />
                 </FormField>
 
-                <FormField label="Handle" required hint="Letters, numbers, underscores">
+                <FormField
+                  label="Handle"
+                  required
+                  hint={handleStatus === "idle" ? "Letters, numbers, underscores" : undefined}
+                >
                   <InputWithPrefix
                     prefix="@"
                     value={handle}
                     onChange={(e) => setHandle(e.target.value)}
                     placeholder="yourhandle"
+                    wrapperClassName={cn(
+                      handleStatus === "available" &&
+                        "border-green-500 focus-within:ring-green-500",
+                      handleStatus === "taken" &&
+                        "border-red-500 focus-within:ring-red-500",
+                    )}
                   />
+                  {handleStatus === "checking" && (
+                    <p className="text-xs text-gray-400">Checking availability...</p>
+                  )}
+                  {handleStatus === "available" && (
+                    <p className="text-xs text-green-600">Available</p>
+                  )}
+                  {handleStatus === "taken" && (
+                    <p className="text-xs text-red-500">This handle is taken.</p>
+                  )}
                 </FormField>
               </div>
 
@@ -219,7 +272,10 @@ export default function PortalSettingsPage() {
           <FormDivider />
 
           <div className="flex justify-end gap-3 pb-2">
-            <Button type="submit" disabled={saving || bannerUploading}>
+            <Button
+              type="submit"
+              disabled={saving || bannerUploading || handleStatus === "taken" || handleStatus === "checking"}
+            >
               {saving ? "Saving..." : bannerUploading ? "Uploading..." : "Save changes"}
             </Button>
           </div>
