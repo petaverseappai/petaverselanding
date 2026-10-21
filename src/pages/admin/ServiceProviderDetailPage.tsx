@@ -637,14 +637,15 @@ export default function ServiceProviderDetailPage() {
 
   const handleInvite = async () => {
     if (!inviteEmail.trim() || !id) return;
+    const isResend = detail?.appUserId !== null;
     setInviting(true);
     try {
       await inviteServiceProvider(Number(id), inviteEmail.trim());
-      toast.success("Invitation sent.");
+      toast.success(isResend ? "Invitation resent." : "Invitation sent.");
       setInviteEmail("");
       await loadDetail(Number(id));
     } catch (e) {
-      toast.error(errMessage(e, "Failed to send invitation."));
+      toast.error(errMessage(e, isResend ? "Failed to resend invitation." : "Failed to send invitation."));
     } finally {
       setInviting(false);
     }
@@ -854,21 +855,33 @@ export default function ServiceProviderDetailPage() {
                   )}
                 </div>
 
-                {/* Invite form — only shown when not yet invited */}
-                {detail.appUserId === null && (
-                  <div className="flex gap-2">
-                    <input
-                      type="email"
-                      value={inviteEmail}
-                      onChange={(e) => setInviteEmail(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleInvite(); } }}
-                      placeholder="Email address"
-                      className="min-w-0 flex-1 rounded-xl border border-border bg-muted px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:border-paw-orange focus:outline-none focus:ring-1 focus:ring-paw-orange"
-                    />
-                    <Button size="sm" onClick={handleInvite} disabled={inviting || !inviteEmail.trim()}>
-                      <Mail className="h-3.5 w-3.5" />
-                      {inviting ? "Sending..." : "Invite"}
-                    </Button>
+                {/* Invite form — shown when not yet invited, or invited but not
+                    yet logged in (resend, in case the link expired). */}
+                {detail.lastLoginAt === null && (
+                  <div className="space-y-1.5">
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        value={inviteEmail}
+                        onChange={(e) => setInviteEmail(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleInvite(); } }}
+                        placeholder="Email address"
+                        className="min-w-0 flex-1 rounded-xl border border-border bg-muted px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:border-paw-orange focus:outline-none focus:ring-1 focus:ring-paw-orange"
+                      />
+                      <Button size="sm" onClick={handleInvite} disabled={inviting || !inviteEmail.trim()}>
+                        <Mail className="h-3.5 w-3.5" />
+                        {inviting
+                          ? "Sending..."
+                          : detail.appUserId === null
+                            ? "Invite"
+                            : "Resend"}
+                      </Button>
+                    </div>
+                    {detail.appUserId !== null && (
+                      <p className="text-xs text-gray-400">
+                        Resend the invitation if the previous link expired.
+                      </p>
+                    )}
                   </div>
                 )}
 
