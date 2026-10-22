@@ -14,6 +14,8 @@ import type {
   AdoptionRequest,
   LookupOption,
   MediaUploadResponse,
+  ProviderBranch,
+  ProviderBranchWrite,
 } from "@/types/portal.types";
 
 // ---------------------------------------------------------------------------
@@ -152,6 +154,38 @@ export async function completeTransfer(listingId: number, requestId: number): Pr
 
 export async function withdrawListing(listingId: number): Promise<void> {
   await portalApi.delete(`/adoption/listings/${listingId}`);
+}
+
+// ---------------------------------------------------------------------------
+// Branches (self-service: provider derived from token, no provider id in route)
+// ---------------------------------------------------------------------------
+
+export async function getBranches(): Promise<ProviderBranch[]> {
+  const { data } = await portalApi.get<ProviderBranch[]>("/service-providers/me/branches");
+  return data;
+}
+
+export async function createBranch(body: ProviderBranchWrite): Promise<ProviderBranch> {
+  const { data } = await portalApi.post<ProviderBranch>(
+    "/service-providers/me/branches",
+    body,
+  );
+  return data;
+}
+
+export async function updateBranch(
+  branchId: number,
+  body: ProviderBranchWrite,
+): Promise<ProviderBranch> {
+  const { data } = await portalApi.put<ProviderBranch>(
+    `/service-providers/me/branches/${branchId}`,
+    body,
+  );
+  return data;
+}
+
+export async function deleteBranch(branchId: number): Promise<void> {
+  await portalApi.delete(`/service-providers/me/branches/${branchId}`);
 }
 
 // ---------------------------------------------------------------------------

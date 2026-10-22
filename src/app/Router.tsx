@@ -47,6 +47,7 @@ import PortalCreatePostWithListingPage from "@/pages/portal/CreatePostWithListin
 import PortalListingsPage from "@/pages/portal/ListingsPage";
 import PortalCreateListingPage from "@/pages/portal/CreateListingPage";
 import PortalListingDetailPage from "@/pages/portal/ListingDetailPage";
+import PortalBranchesPage from "@/pages/portal/BranchesPage";
 
 export function AppRouter() {
   return (
@@ -110,6 +111,7 @@ export function AppRouter() {
           <Route path={ROUTES.PORTAL_LISTINGS} element={<PortalListingsPage />} />
           <Route path={ROUTES.PORTAL_LISTINGS_NEW} element={<PortalCreateListingPage />} />
           <Route path={ROUTES.PORTAL_LISTING_DETAIL} element={<PortalListingDetailPage />} />
+          <Route path={ROUTES.PORTAL_BRANCHES} element={<PortalBranchesPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

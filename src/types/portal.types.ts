@@ -169,6 +169,37 @@ export interface AdoptionRequest {
 }
 
 // ---------------------------------------------------------------------------
+// Branches
+// ---------------------------------------------------------------------------
+
+export interface ProviderBranch {
+  id: number;
+  address: string;
+  latitude: number | null;
+  longitude: number | null;
+  phone: string | null;
+  whatsApp: string | null;
+  emergency: string | null;
+  website: string | null;
+  instagram: string | null;
+  email: string | null;
+  storefrontImageUrl: string | null;
+}
+
+export interface ProviderBranchWrite {
+  address: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  phone?: string | null;
+  whatsApp?: string | null;
+  emergency?: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  email?: string | null;
+  storefrontImageUrl?: string | null;
+}
+
+// ---------------------------------------------------------------------------
 // Lookups
 // ---------------------------------------------------------------------------
 

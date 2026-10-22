@@ -5,6 +5,7 @@ import {
   FileText,
   LogOut,
   HomeIcon,
+  MapPin,
 } from "lucide-react";
 import { usePortalAuth } from "@/context/PortalAuthContext";
 import { ROUTES } from "@/constants/routes";
@@ -29,6 +30,7 @@ const GROUPS: NavGroup[] = [
   {
     heading: "Account",
     items: [
+      { label: "Branches", icon: MapPin, to: ROUTES.PORTAL_BRANCHES },
       { label: "Page Settings", icon: Settings, to: ROUTES.PORTAL_SETTINGS },
     ],
   },
