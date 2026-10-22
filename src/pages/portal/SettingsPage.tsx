@@ -88,8 +88,8 @@ export default function PortalSettingsPage() {
       const res = await uploadMedia(file, MediaCategory.ProviderBanner);
       setBannerAssetId(res.assetId);
       if (res.url) setBannerPreview(res.url);
-    } catch {
-      toast.error("Failed to upload banner.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to upload banner.");
       setBannerPreview(page?.bannerUrl ?? null);
     } finally {
       setBannerUploading(false);

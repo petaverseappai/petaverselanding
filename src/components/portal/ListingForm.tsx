@@ -55,8 +55,8 @@ export function ListingForm({ value, onChange }: Props) {
       const res = await uploadMedia(file, MediaCategory.AdoptionListingPhoto);
       set({ photoAssetId: res.assetId });
       if (res.url) setPhotoPreview(res.url);
-    } catch {
-      toast.error("Failed to upload photo.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to upload photo.");
     } finally {
       setPhotoUploading(false);
     }

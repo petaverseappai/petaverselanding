@@ -41,8 +41,8 @@ export default function PortalCreatePostWithListingPage() {
         }),
       );
       setMedia((prev) => [...prev, ...results]);
-    } catch {
-      toast.error("Failed to upload media.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to upload media.");
     } finally {
       setUploading(false);
     }

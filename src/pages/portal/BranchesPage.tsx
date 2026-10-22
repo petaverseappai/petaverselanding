@@ -161,8 +161,8 @@ export default function PortalBranchesPage() {
     try {
       const res = await uploadMedia(file, MediaCategory.ProviderLogo);
       if (res.url) patch({ storefrontImageUrl: res.url });
-    } catch {
-      toast.error("Failed to upload image.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to upload image.");
     } finally {
       setUploading(false);
     }

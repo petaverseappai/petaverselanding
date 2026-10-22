@@ -1,5 +1,7 @@
 import { portalApi } from "@/services/portalAxios";
 import { MediaCategory } from "@/constants/mediaCategory";
+import { probeVideoDuration, validateMediaFile } from "@/constants/mediaConstraints";
+import { compressImage } from "@/lib/imageCompressor";
 import type {
   MyPage,
   PageUpdateRequest,
@@ -231,11 +233,15 @@ async function getUploadUrl(
   contentType: string,
   fileName: string,
   category: MediaCategory,
+  sizeBytes: number,
+  durationSeconds: number | null,
 ): Promise<UploadUrlResponse> {
   const { data } = await portalApi.post<UploadUrlResponse>("/media/upload-url", {
     category,
     contentType,
     fileName,
+    sizeBytes,
+    durationSeconds,
   });
   return data;
 }
@@ -249,11 +255,27 @@ export async function uploadMedia(
   file: File,
   category: MediaCategory,
 ): Promise<MediaUploadResponse> {
-  const uploadInfo = await getUploadUrl(file.type, file.name, category);
+  const isVideo = file.type.toLowerCase().startsWith("video/");
+
+  // Images are downscaled and re-encoded to JPEG before upload (videos are sent
+  // as-is). This keeps legitimate photos well under the size caps and strips EXIF.
+  const upload = isVideo ? file : await compressImage(file, category);
+  const durationSeconds = isVideo ? await probeVideoDuration(upload) : null;
+
+  const validationError = validateMediaFile(upload, category, durationSeconds);
+  if (validationError) throw new Error(validationError);
+
+  const uploadInfo = await getUploadUrl(
+    upload.type,
+    upload.name,
+    category,
+    upload.size,
+    durationSeconds,
+  );
   const putResponse = await fetch(uploadInfo.uploadUrl, {
     method: "PUT",
     headers: { "Content-Type": uploadInfo.contentType },
-    body: await file.arrayBuffer(),
+    body: await upload.arrayBuffer(),
   });
   if (!putResponse.ok) throw new Error("Upload failed");
   const confirmed = await confirmUpload(uploadInfo.assetId);

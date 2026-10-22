@@ -671,11 +671,14 @@ export interface ConfirmUploadResponse {
 export async function getUploadUrl(
   contentType: string,
   fileName: string,
+  sizeBytes: number,
 ): Promise<UploadUrlResponse> {
   const { data } = await api.post<UploadUrlResponse>("/media/upload-url", {
     category: MediaCategory.ProviderLogo,
     contentType,
     fileName,
+    sizeBytes,
+    durationSeconds: null,
   });
   return data;
 }
