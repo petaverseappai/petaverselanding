@@ -155,6 +155,10 @@ export async function completeTransfer(listingId: number, requestId: number): Pr
 }
 
 export async function withdrawListing(listingId: number): Promise<void> {
+  await portalApi.post(`/adoption/listings/${listingId}/withdraw`);
+}
+
+export async function deleteListing(listingId: number): Promise<void> {
   await portalApi.delete(`/adoption/listings/${listingId}`);
 }
 

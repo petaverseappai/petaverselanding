@@ -8,6 +8,7 @@ import {
   rejectRequest,
   completeTransfer,
   withdrawListing,
+  deleteListing,
 } from "@/services/portal";
 import { ROUTES } from "@/constants/routes";
 import {
@@ -46,6 +47,7 @@ export default function PortalListingDetailPage() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<number | null>(null);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const reload = () => {
     setLoading(true);
@@ -81,9 +83,10 @@ export default function PortalListingDetailPage() {
 
   if (!listing) return null;
 
-  const readOnly  = isReadOnly(listing.statusId);
-  const isPending = listing.statusId === STATUS_PENDING;
-  const isAvail   = listing.statusId === STATUS_AVAILABLE;
+  const readOnly   = isReadOnly(listing.statusId);
+  const isPending  = listing.statusId === STATUS_PENDING;
+  const isAvail    = listing.statusId === STATUS_AVAILABLE;
+  const canDelete  = isAvail || listing.statusId === STATUS_WITHDRAWN;
 
   return (
     <div className="space-y-6">
@@ -136,17 +139,30 @@ export default function PortalListingDetailPage() {
               <p className="mt-1 text-sm text-gray-700">{listing.description}</p>
             )}
 
-            {!readOnly && isAvail && (
-              <div className="mt-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-red-200 text-red-600 hover:bg-red-50"
-                  disabled={busy === -1}
-                  onClick={() => setWithdrawOpen(true)}
-                >
-                  {busy === -1 ? "Withdrawing..." : "Withdraw listing"}
-                </Button>
+            {(isAvail || canDelete) && (
+              <div className="mt-3 flex gap-2">
+                {isAvail && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-200 text-red-600 hover:bg-red-50"
+                    disabled={busy === -1}
+                    onClick={() => setWithdrawOpen(true)}
+                  >
+                    {busy === -1 ? "Withdrawing..." : "Withdraw listing"}
+                  </Button>
+                )}
+                {canDelete && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-200 text-red-600 hover:bg-red-50"
+                    disabled={busy === -1}
+                    onClick={() => setDeleteOpen(true)}
+                  >
+                    Delete listing
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -235,6 +251,21 @@ export default function PortalListingDetailPage() {
         title="Withdraw listing"
         message="This listing will be withdrawn and closed to new applicants. This cannot be undone."
         confirmLabel="Withdraw"
+        danger
+      />
+
+      <ConfirmModal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() =>
+          act(async () => {
+            await deleteListing(id);
+            navigate(ROUTES.PORTAL_LISTINGS);
+          })
+        }
+        title="Delete listing"
+        message="This will permanently delete the listing and all its applicants. This cannot be undone."
+        confirmLabel="Delete"
         danger
       />
     </div>
