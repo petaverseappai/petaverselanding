@@ -44,7 +44,7 @@ import { cn } from "@/lib/utils";
 // Image upload helper
 // ---------------------------------------------------------------------------
 
-async function uploadImage(file: File, category: MediaCategory): Promise<string> {
+async function uploadImage(file: File, category: MediaCategory): Promise<{ assetId: string; url: string }> {
   const compressed = await compressImage(file, category);
   const { assetId, uploadUrl, contentType } = await getUploadUrlForCommunity(
     compressed.type || file.type,
@@ -57,8 +57,8 @@ async function uploadImage(file: File, category: MediaCategory): Promise<string>
     body: compressed,
     headers: { "Content-Type": contentType },
   });
-  await confirmUpload(assetId);
-  return assetId;
+  const confirmed = await confirmUpload(assetId);
+  return { assetId, url: confirmed.url };
 }
 
 // ---------------------------------------------------------------------------
@@ -86,9 +86,9 @@ function ImageUploadField({
   const handleFile = async (file: File) => {
     setUploading(true);
     try {
-      const id = await uploadImage(file, category);
-      setPreview(URL.createObjectURL(file));
-      onAssetId(id);
+      const { assetId, url } = await uploadImage(file, category);
+      setPreview(url);
+      onAssetId(assetId);
     } catch (e) {
       toast.error(errMessage(e, "Upload failed."));
     } finally {
