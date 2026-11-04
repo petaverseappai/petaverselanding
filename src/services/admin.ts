@@ -63,7 +63,7 @@ import type {
 
 // Re-export types used in community and service provider pages
 export type { LookupItem };
-export type { CommunityListItem, CommunityDetail, CommunityUpdateRequest, CommunityContentItem, CommunityContentResult };
+export type { CommunityListItem, CommunityDetail, CommunityUpdateRequest, CommunityContentResult };
 export type { VisionProfile, VisionProfileWrite };
 export type {
   ServiceProviderListItem,

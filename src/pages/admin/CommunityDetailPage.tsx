@@ -33,7 +33,6 @@ import {
   TH,
   TR,
   TD,
-  Pagination,
   EmptyState,
 } from "@/components/admin/ui";
 import { Button } from "@/components/ui/button";
@@ -46,7 +45,7 @@ import { cn } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 async function uploadImage(file: File, category: number): Promise<string> {
-  const compressed = await compressImage(file);
+  const compressed = await compressImage(file, category);
   const { assetId, uploadUrl, contentType } = await getUploadUrlForCommunity(
     compressed.type || file.type,
     file.name,
