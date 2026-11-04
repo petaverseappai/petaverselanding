@@ -25,6 +25,8 @@ import type {
   LostFoundReport,
   CommunityListItem,
   CommunityDetail,
+  CommunityUpdateRequest,
+  CommunityContentResult,
   PostListItem,
   BroadcastRequest,
   BroadcastResponse,
@@ -59,8 +61,9 @@ import type {
   PageWrite,
 } from "@/types/admin.types";
 
-// Re-export types used in service provider pages
+// Re-export types used in community and service provider pages
 export type { LookupItem };
+export type { CommunityListItem, CommunityDetail, CommunityUpdateRequest, CommunityContentItem, CommunityContentResult };
 export type { VisionProfile, VisionProfileWrite };
 export type {
   ServiceProviderListItem,
@@ -316,8 +319,9 @@ export async function removeLostFound(id: number): Promise<void> {
 
 // Communities
 export async function getCommunities(query: {
-  category?: string;
   search?: string;
+  isSystem?: boolean;
+  isDeleted?: boolean;
   page?: number;
   pageSize?: number;
 }): Promise<PagedResult<CommunityListItem>> {
@@ -332,12 +336,55 @@ export async function getCommunity(id: number): Promise<CommunityDetail> {
   return data;
 }
 
-export async function archiveCommunity(id: number): Promise<void> {
-  await api.post(`/admin/communities/${id}/archive`);
+export async function updateCommunity(
+  id: number,
+  body: CommunityUpdateRequest,
+): Promise<CommunityDetail> {
+  const { data } = await api.patch<CommunityDetail>(`/admin/communities/${id}`, body);
+  return data;
 }
 
-export async function reassignCommunityOwner(id: number, newLeadPetId: number): Promise<void> {
-  await api.put(`/admin/communities/${id}/owner`, { newLeadPetId });
+export async function deleteCommunity(id: number): Promise<void> {
+  await api.delete(`/admin/communities/${id}`);
+}
+
+export async function restoreCommunity(id: number): Promise<void> {
+  await api.post(`/admin/communities/${id}/restore`);
+}
+
+export async function getCommunityContent(
+  id: number,
+  query: { type?: string; page?: number; pageSize?: number },
+): Promise<CommunityContentResult> {
+  const { data } = await api.get<CommunityContentResult>(
+    `/admin/communities/${id}/content`,
+    { params: params(query) },
+  );
+  return data;
+}
+
+export async function removeCommunityContent(
+  communityId: number,
+  type: string,
+  contentId: number,
+): Promise<void> {
+  await api.delete(`/admin/communities/${communityId}/content/${type}/${contentId}`);
+}
+
+export async function getUploadUrlForCommunity(
+  contentType: string,
+  fileName: string,
+  sizeBytes: number,
+  category: number,
+): Promise<UploadUrlResponse> {
+  const { data } = await api.post<UploadUrlResponse>("/media/upload-url", {
+    category,
+    contentType,
+    fileName,
+    sizeBytes,
+    durationSeconds: null,
+  });
+  return data;
 }
 
 // Posts

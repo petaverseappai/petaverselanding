@@ -313,9 +313,14 @@ export interface CommunityListItem {
   id: number;
   name: string;
   handle: string;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
   category: string;
-  leadPetId: number;
-  leadPetName: string;
+  isSystem: boolean;
+  speciesId: number | null;
+  speciesName: string | null;
+  leadPetId: number | null;
+  leadPetName: string | null;
   memberCount: number;
   postCount: number;
   isDeleted: boolean;
@@ -324,8 +329,48 @@ export interface CommunityListItem {
 
 export interface CommunityDetail extends CommunityListItem {
   description: string | null;
-  leadOwnerUserId: string;
+  leadPetOwnerName: string | null;
 }
+
+export interface CommunityUpdateRequest {
+  name?: string;
+  handle?: string;
+  description?: string;
+  category?: number;
+  leadPetId?: number;
+  avatarAssetId?: string;
+  bannerAssetId?: string;
+  isDeleted?: boolean;
+}
+
+export interface CommunityContentItem {
+  type: "post" | "event" | "poll";
+  id: number;
+  title: string | null;
+  body: string | null;
+  authorPetName: string;
+  isDeleted: boolean;
+  createdAt: string;
+}
+
+export interface CommunityContentResult {
+  items: CommunityContentItem[];
+  totalCount: number;
+  hasMore: boolean;
+  nextPage: number | null;
+}
+
+export const COMMUNITY_CATEGORIES: { value: string; label: string }[] = [
+  { value: "1", label: "Species" },
+  { value: "2", label: "Interest" },
+  { value: "3", label: "BreedClub" },
+  { value: "4", label: "ShelterAndRescues" },
+  { value: "5", label: "Breeding" },
+  { value: "6", label: "SpecialNeeds" },
+  { value: "7", label: "Activity" },
+  { value: "8", label: "Health" },
+  { value: "9", label: "Other" },
+];
 
 export interface PostListItem {
   id: number;
