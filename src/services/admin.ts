@@ -375,7 +375,7 @@ export async function getUploadUrlForCommunity(
   contentType: string,
   fileName: string,
   sizeBytes: number,
-  category: number,
+  category: MediaCategory,
 ): Promise<UploadUrlResponse> {
   const { data } = await api.post<UploadUrlResponse>("/media/upload-url", {
     category,

@@ -44,7 +44,7 @@ import { cn } from "@/lib/utils";
 // Image upload helper
 // ---------------------------------------------------------------------------
 
-async function uploadImage(file: File, category: number): Promise<string> {
+async function uploadImage(file: File, category: MediaCategory): Promise<string> {
   const compressed = await compressImage(file, category);
   const { assetId, uploadUrl, contentType } = await getUploadUrlForCommunity(
     compressed.type || file.type,
