@@ -3,6 +3,7 @@ import { ROUTES } from "@/constants/routes";
 import LandingPage from "@/pages/landing/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import SharePage from "@/pages/share/SharePage";
+import InvitePage from "@/pages/invite/InvitePage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import PrivacyPage from "@/pages/legal/PrivacyPage";
 import TermsPage from "@/pages/legal/TermsPage";
@@ -54,6 +55,7 @@ export function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path={ROUTES.LANDING} element={<LandingPage />} />
+        <Route path={ROUTES.INVITE} element={<InvitePage />} />
         <Route path={ROUTES.SHARE} element={<SharePage />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
         <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />

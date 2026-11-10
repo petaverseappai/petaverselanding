@@ -1,5 +1,6 @@
 export const ROUTES = {
   LANDING: "/",
+  INVITE: "/invite",
   SHARE: "/p/:id",
   RESET_PASSWORD: "/reset-password",
   PRIVACY: "/privacy",
