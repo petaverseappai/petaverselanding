@@ -219,7 +219,7 @@ export async function getCoatColors(): Promise<LookupOption[]> {
 }
 
 // ---------------------------------------------------------------------------
-// Media upload (presigned 3-step flow)
+// Media upload (presigned 3-step flow using R2)
 // ---------------------------------------------------------------------------
 
 interface UploadUrlResponse {
