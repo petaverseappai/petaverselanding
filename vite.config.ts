@@ -35,7 +35,7 @@ function wellKnownPlugin(env: Record<string, string>): Plugin {
               relation: ['delegate_permission/common.handle_all_urls'],
               target: {
                 namespace: 'android_app',
-                package_name: 'com.petaverse.app',
+                package_name: 'com.petaverse.mobile',
                 sha256_cert_fingerprints: [androidSha256],
               },
             },
@@ -73,7 +73,7 @@ function wellKnownPlugin(env: Record<string, string>): Plugin {
             relation: ['delegate_permission/common.handle_all_urls'],
             target: {
               namespace: 'android_app',
-              package_name: 'com.petaverse.app',
+              package_name: 'com.petaverse.mobile',
               sha256_cert_fingerprints: [androidSha256],
             },
           },
