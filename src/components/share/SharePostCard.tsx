@@ -1,5 +1,3 @@
-import { AppleIcon, GooglePlayIcon } from "@/components/share/Icons";
-
 interface PostData {
   title: string;
   caption: string | null;
@@ -84,29 +82,31 @@ export function SharePostCard({ post, id }: SharePostCardProps) {
         </div>
 
         {/* App Store Buttons */}
-        <div className="space-y-3">
+        <div className="flex flex-col items-center gap-3">
           <a
             href={appStoreUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full py-3 px-4 bg-black text-white text-center rounded-lg hover:bg-gray-900 transition font-medium text-sm"
+            className="transition hover:opacity-80"
           >
-            <div className="flex items-center justify-center gap-2">
-              <AppleIcon />
-              Download on the App Store
-            </div>
+            <img
+              src="/assets/badges/appstore.svg"
+              alt="Download on the App Store"
+              className="h-12 w-auto"
+            />
           </a>
 
           <a
             href={playStoreUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full py-3 px-4 bg-black text-white text-center rounded-lg hover:bg-gray-900 transition font-medium text-sm"
+            className="transition hover:opacity-80"
           >
-            <div className="flex items-center justify-center gap-2">
-              <GooglePlayIcon />
-              Get it on Google Play
-            </div>
+            <img
+              src="/assets/badges/googleplay.svg"
+              alt="Get it on Google Play"
+              className="h-12 w-auto"
+            />
           </a>
         </div>
 
