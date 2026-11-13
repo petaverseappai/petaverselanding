@@ -81,6 +81,16 @@ export function SharePostCard({ post, id }: SharePostCardProps) {
           </p>
         </div>
 
+        {/* Already Have It Button */}
+        <div className="space-y-3">
+          <button
+            onClick={openInApp}
+            className="block w-full py-3 px-4 border-2 border-blue-600 text-blue-600 text-center rounded-lg hover:bg-blue-50 transition font-medium"
+          >
+            Open in PetaVerse
+          </button>
+        </div>
+
         {/* App Store Buttons */}
         <div className="flex flex-col items-center gap-3">
           <a
@@ -108,16 +118,6 @@ export function SharePostCard({ post, id }: SharePostCardProps) {
               className="h-12 w-auto"
             />
           </a>
-        </div>
-
-        {/* Already Have It Button */}
-        <div className="space-y-3">
-          <button
-            onClick={openInApp}
-            className="block w-full py-3 px-4 border-2 border-blue-600 text-blue-600 text-center rounded-lg hover:bg-blue-50 transition font-medium"
-          >
-            Open in PetaVerse
-          </button>
         </div>
 
         {/* Sign In Option */}
