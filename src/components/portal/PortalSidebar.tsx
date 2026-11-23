@@ -1,5 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Settings,
+  FileText,
+  LogOut,
+  HomeIcon,
+} from "lucide-react";
 import { usePortalAuth } from "@/context/PortalAuthContext";
 import { ROUTES } from "@/constants/routes";
 
@@ -11,6 +17,19 @@ const GROUPS: NavGroup[] = [
     heading: "Overview",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, to: ROUTES.PORTAL_DASHBOARD, end: true },
+    ],
+  },
+  {
+    heading: "Content",
+    items: [
+      { label: "Posts", icon: FileText, to: ROUTES.PORTAL_POSTS },
+      { label: "Adoptions", icon: HomeIcon, to: ROUTES.PORTAL_LISTINGS },
+    ],
+  },
+  {
+    heading: "Account",
+    items: [
+      { label: "Page Settings", icon: Settings, to: ROUTES.PORTAL_SETTINGS },
     ],
   },
 ];
