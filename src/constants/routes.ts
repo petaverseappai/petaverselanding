@@ -1,5 +1,6 @@
 export const ROUTES = {
   LANDING: "/",
+  INVITE: "/invite",
   SHARE: "/p/:id",
   RESET_PASSWORD: "/reset-password",
   PRIVACY: "/privacy",
@@ -20,6 +21,7 @@ export const ROUTES = {
   PORTAL_LISTINGS: "/portal/listings",
   PORTAL_LISTINGS_NEW: "/portal/listings/new",
   PORTAL_LISTING_DETAIL: "/portal/listings/:listingId",
+  PORTAL_BRANCHES: "/portal/branches",
 
   // Dashboard is the index (ADMIN)
   ADMIN_MODERATION: "/admin/moderation",

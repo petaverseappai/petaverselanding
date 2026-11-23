@@ -3,6 +3,7 @@ import { ROUTES } from "@/constants/routes";
 import LandingPage from "@/pages/landing/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import SharePage from "@/pages/share/SharePage";
+import InvitePage from "@/pages/invite/InvitePage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import PrivacyPage from "@/pages/legal/PrivacyPage";
 import TermsPage from "@/pages/legal/TermsPage";
@@ -48,12 +49,14 @@ import PortalCreatePostWithListingPage from "@/pages/portal/CreatePostWithListin
 import PortalListingsPage from "@/pages/portal/ListingsPage";
 import PortalCreateListingPage from "@/pages/portal/CreateListingPage";
 import PortalListingDetailPage from "@/pages/portal/ListingDetailPage";
+import PortalBranchesPage from "@/pages/portal/BranchesPage";
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path={ROUTES.LANDING} element={<LandingPage />} />
+        <Route path={ROUTES.INVITE} element={<InvitePage />} />
         <Route path={ROUTES.SHARE} element={<SharePage />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
         <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
@@ -112,6 +115,7 @@ export function AppRouter() {
           <Route path={ROUTES.PORTAL_LISTINGS} element={<PortalListingsPage />} />
           <Route path={ROUTES.PORTAL_LISTINGS_NEW} element={<PortalCreateListingPage />} />
           <Route path={ROUTES.PORTAL_LISTING_DETAIL} element={<PortalListingDetailPage />} />
+          <Route path={ROUTES.PORTAL_BRANCHES} element={<PortalBranchesPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

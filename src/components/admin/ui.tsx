@@ -320,6 +320,7 @@ export function Modal({
   children,
   footer,
   wide,
+  dismissOnBackdrop = true,
 }: {
   open: boolean;
   onClose: () => void;
@@ -327,12 +328,13 @@ export function Modal({
   children: React.ReactNode;
   footer?: React.ReactNode;
   wide?: boolean;
+  dismissOnBackdrop?: boolean;
 }) {
   if (!open) return null;
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-      onClick={onClose}
+      onClick={dismissOnBackdrop ? onClose : undefined}
     >
       <div
         className={cn(

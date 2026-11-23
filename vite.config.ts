@@ -35,7 +35,7 @@ function wellKnownPlugin(env: Record<string, string>): Plugin {
               relation: ['delegate_permission/common.handle_all_urls'],
               target: {
                 namespace: 'android_app',
-                package_name: 'com.petaverse.app',
+                package_name: 'com.petaverse.mobile',
                 sha256_cert_fingerprints: [androidSha256],
               },
             },
@@ -54,7 +54,7 @@ function wellKnownPlugin(env: Record<string, string>): Plugin {
               details: [
                 {
                   appID: `${appleTeamId}.${appleBundleId}`,
-                  paths: ['/p/*'],
+                  paths: ['/p/*', '/invite'],
                 },
               ],
             },
@@ -73,7 +73,7 @@ function wellKnownPlugin(env: Record<string, string>): Plugin {
             relation: ['delegate_permission/common.handle_all_urls'],
             target: {
               namespace: 'android_app',
-              package_name: 'com.petaverse.app',
+              package_name: 'com.petaverse.mobile',
               sha256_cert_fingerprints: [androidSha256],
             },
           },
@@ -94,7 +94,7 @@ function wellKnownPlugin(env: Record<string, string>): Plugin {
             details: [
               {
                 appID: `${appleTeamId}.${appleBundleId}`,
-                paths: ['/p/*'],
+                paths: ['/p/*', '/invite'],
               },
             ],
           },
@@ -119,7 +119,7 @@ export default defineConfig(({ mode }) => {
     "script-src 'self' https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https://media.petaverseapp.com https://cdn.example.com https://*.r2.cloudflarestorage.com",
+    "img-src 'self' data: https://media.petaverseapp.com https://cdn.example.com https://*.r2.cloudflarestorage.com https://*.amazonaws.com",
     `connect-src 'self' ${backendOrigin} https://media.petaverseapp.com https://*.r2.cloudflarestorage.com https://cloudflareinsights.com`,
     "frame-ancestors 'none'",
     "base-uri 'self'",

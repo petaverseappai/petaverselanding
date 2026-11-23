@@ -21,24 +21,25 @@ import {
   SelectField,
 } from "@/components/admin/ui";
 import { adminPaths } from "@/constants/routes";
-import { fmtDate, errMessage } from "@/lib/adminFormat";
+import { fmtDate, fmtNumber, errMessage } from "@/lib/adminFormat";
 import { useDebounced } from "@/lib/useDebounced";
 
-const CATEGORY_OPTS = [
-  "BreedClub",
-  "ShelterAndRescues",
-  "Breeding",
-  "SpecialNeeds",
-  "Activity",
-  "Health",
-  "Other",
-].map((c) => ({ value: c, label: c }));
+const IS_SYSTEM_OPTS = [
+  { value: "true", label: "Species (system)" },
+  { value: "false", label: "User-created" },
+];
+
+const IS_DELETED_OPTS = [
+  { value: "false", label: "Active" },
+  { value: "true", label: "Deleted" },
+];
 
 export default function CommunitiesPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounced(search, 350);
-  const [category, setCategory] = useState("");
+  const [isSystem, setIsSystem] = useState("");
+  const [isDeleted, setIsDeleted] = useState("false");
   const [page, setPage] = useState(1);
 
   const [items, setItems] = useState<CommunityListItem[]>([]);
@@ -48,13 +49,14 @@ export default function CommunitiesPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, category]);
+  }, [debouncedSearch, isSystem, isDeleted]);
 
   useEffect(() => {
     setLoading(true);
     getCommunities({
       search: debouncedSearch || undefined,
-      category: category || undefined,
+      isSystem: isSystem === "" ? undefined : isSystem === "true",
+      isDeleted: isDeleted === "" ? undefined : isDeleted === "true",
       page,
       pageSize: 20,
     })
@@ -65,7 +67,7 @@ export default function CommunitiesPage() {
       })
       .catch((e) => toast.error(errMessage(e, "Failed to load communities.")))
       .finally(() => setLoading(false));
-  }, [debouncedSearch, category, page]);
+  }, [debouncedSearch, isSystem, isDeleted, page]);
 
   return (
     <div className="space-y-6">
@@ -81,10 +83,16 @@ export default function CommunitiesPage() {
               className="w-64"
             />
             <SelectField
-              value={category}
-              onChange={setCategory}
-              options={CATEGORY_OPTS}
-              placeholder="Any category"
+              value={isSystem}
+              onChange={setIsSystem}
+              options={IS_SYSTEM_OPTS}
+              placeholder="All types"
+            />
+            <SelectField
+              value={isDeleted}
+              onChange={setIsDeleted}
+              options={IS_DELETED_OPTS}
+              placeholder="All statuses"
             />
           </FilterBar>
         </div>
@@ -99,6 +107,7 @@ export default function CommunitiesPage() {
               <TR>
                 <TH>Name</TH>
                 <TH>Category</TH>
+                <TH>Species</TH>
                 <TH>Lead pet</TH>
                 <TH>Members</TH>
                 <TH>Posts</TH>
@@ -110,17 +119,35 @@ export default function CommunitiesPage() {
               {items.map((c) => (
                 <TR key={c.id} onClick={() => navigate(adminPaths.communityDetail(c.id))}>
                   <TD>
-                    <p className="font-medium text-gray-900">{c.name}</p>
-                    <p className="text-xs text-gray-400">@{c.handle}</p>
+                    <div className="flex items-center gap-2">
+                      {c.avatarUrl && (
+                        <img
+                          src={c.avatarUrl}
+                          alt=""
+                          className="h-7 w-7 rounded-full object-cover"
+                        />
+                      )}
+                      <div>
+                        <p className="font-medium text-gray-900">{c.name}</p>
+                        {c.handle && (
+                          <p className="text-xs text-gray-400">@{c.handle}</p>
+                        )}
+                      </div>
+                    </div>
                   </TD>
                   <TD>
-                    <Tag tone="blue">{c.category}</Tag>
+                    <Tag tone={c.isSystem ? "orange" : "blue"}>{c.category}</Tag>
                   </TD>
-                  <TD>{c.leadPetName}</TD>
-                  <TD>{c.memberCount}</TD>
-                  <TD>{c.postCount}</TD>
+                  <TD className="text-gray-500">{c.speciesName ?? "—"}</TD>
+                  <TD className="text-gray-700">{c.leadPetName ?? "—"}</TD>
+                  <TD>{fmtNumber(c.memberCount)}</TD>
+                  <TD>{fmtNumber(c.postCount)}</TD>
                   <TD>
-                    {c.isDeleted ? <Tag tone="red">Archived</Tag> : <Tag tone="green">Active</Tag>}
+                    {c.isDeleted ? (
+                      <Tag tone="red">Deleted</Tag>
+                    ) : (
+                      <Tag tone="green">Active</Tag>
+                    )}
                   </TD>
                   <TD className="whitespace-nowrap text-gray-500">{fmtDate(c.createdAt)}</TD>
                 </TR>

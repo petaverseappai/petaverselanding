@@ -22,6 +22,9 @@ import type {
   Category,
   LookupItem,
 } from "@/services/admin";
+import { MediaCategory } from "@/constants/mediaCategory";
+import { validateMediaFile } from "@/constants/mediaConstraints";
+import { compressImage } from "@/lib/imageCompressor";
 import {
   PageHeader,
   Panel,
@@ -544,14 +547,16 @@ export default function ServiceProviderDetailPage() {
     if (!isNew && id) loadDetail(Number(id));
   }, [id, isNew]);
 
-  const handleLogoUpload = async (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file.");
+  const handleLogoUpload = async (rawFile: File) => {
+    const file = await compressImage(rawFile, MediaCategory.ProviderLogo);
+    const validationError = validateMediaFile(file, MediaCategory.ProviderLogo, null);
+    if (validationError) {
+      toast.error(validationError);
       return;
     }
     setUploading(true);
     try {
-      const uploadInfo = await getUploadUrl(file.type, file.name);
+      const uploadInfo = await getUploadUrl(file.type, file.name, file.size);
       const putResponse = await fetch(uploadInfo.uploadUrl, {
         method: "PUT",
         headers: { "Content-Type": uploadInfo.contentType },
@@ -568,14 +573,16 @@ export default function ServiceProviderDetailPage() {
     }
   };
 
-  const handleStorefrontUpload = async (branchIdx: number, file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file.");
+  const handleStorefrontUpload = async (branchIdx: number, rawFile: File) => {
+    const file = await compressImage(rawFile, MediaCategory.ProviderLogo);
+    const validationError = validateMediaFile(file, MediaCategory.ProviderLogo, null);
+    if (validationError) {
+      toast.error(validationError);
       return;
     }
     setUploadingBranchIdx(branchIdx);
     try {
-      const uploadInfo = await getUploadUrl(file.type, file.name);
+      const uploadInfo = await getUploadUrl(file.type, file.name, file.size);
       const putResponse = await fetch(uploadInfo.uploadUrl, {
         method: "PUT",
         headers: { "Content-Type": uploadInfo.contentType },

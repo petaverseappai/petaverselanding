@@ -1,5 +1,3 @@
-import { AppleIcon, GooglePlayIcon } from "@/components/share/Icons";
-
 interface PostData {
   title: string;
   caption: string | null;
@@ -83,33 +81,6 @@ export function SharePostCard({ post, id }: SharePostCardProps) {
           </p>
         </div>
 
-        {/* App Store Buttons */}
-        <div className="space-y-3">
-          <a
-            href={appStoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full py-3 px-4 bg-black text-white text-center rounded-lg hover:bg-gray-900 transition font-medium text-sm"
-          >
-            <div className="flex items-center justify-center gap-2">
-              <AppleIcon />
-              Download on the App Store
-            </div>
-          </a>
-
-          <a
-            href={playStoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full py-3 px-4 bg-black text-white text-center rounded-lg hover:bg-gray-900 transition font-medium text-sm"
-          >
-            <div className="flex items-center justify-center gap-2">
-              <GooglePlayIcon />
-              Get it on Google Play
-            </div>
-          </a>
-        </div>
-
         {/* Already Have It Button */}
         <div className="space-y-3">
           <button
@@ -118,6 +89,35 @@ export function SharePostCard({ post, id }: SharePostCardProps) {
           >
             Open in PetaVerse
           </button>
+        </div>
+
+        {/* App Store Buttons */}
+        <div className="flex flex-col items-center gap-3">
+          <a
+            href={appStoreUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition hover:opacity-80"
+          >
+            <img
+              src="/assets/badges/appstore.svg"
+              alt="Download on the App Store"
+              className="h-12 w-auto"
+            />
+          </a>
+
+          <a
+            href={playStoreUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition hover:opacity-80"
+          >
+            <img
+              src="/assets/badges/googleplay.svg"
+              alt="Get it on Google Play"
+              className="h-12 w-auto"
+            />
+          </a>
         </div>
 
         {/* Sign In Option */}

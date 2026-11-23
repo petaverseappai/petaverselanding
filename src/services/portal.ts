@@ -1,8 +1,11 @@
 import { portalApi } from "@/services/portalAxios";
 import { MediaCategory } from "@/constants/mediaCategory";
+import { probeVideoDuration, validateMediaFile } from "@/constants/mediaConstraints";
+import { compressImage } from "@/lib/imageCompressor";
 import type {
   MyPage,
   PageUpdateRequest,
+  HandleAvailability,
   PageDashboard,
   PostFeedResult,
   CreatePostRequest,
@@ -13,6 +16,8 @@ import type {
   AdoptionRequest,
   LookupOption,
   MediaUploadResponse,
+  ProviderBranch,
+  ProviderBranchWrite,
 } from "@/types/portal.types";
 
 // ---------------------------------------------------------------------------
@@ -31,6 +36,17 @@ export async function getPage(pageId: number): Promise<MyPage> {
 
 export async function updatePage(pageId: number, body: PageUpdateRequest): Promise<MyPage> {
   const { data } = await portalApi.put<MyPage>(`/pages/${pageId}`, body);
+  return data;
+}
+
+export async function checkHandleAvailable(
+  handle: string,
+  signal?: AbortSignal,
+): Promise<HandleAvailability> {
+  const { data } = await portalApi.get<HandleAvailability>("/pages/handle-available", {
+    params: { handle },
+    signal,
+  });
   return data;
 }
 
@@ -139,7 +155,43 @@ export async function completeTransfer(listingId: number, requestId: number): Pr
 }
 
 export async function withdrawListing(listingId: number): Promise<void> {
+  await portalApi.post(`/adoption/listings/${listingId}/withdraw`);
+}
+
+export async function deleteListing(listingId: number): Promise<void> {
   await portalApi.delete(`/adoption/listings/${listingId}`);
+}
+
+// ---------------------------------------------------------------------------
+// Branches (self-service: provider derived from token, no provider id in route)
+// ---------------------------------------------------------------------------
+
+export async function getBranches(): Promise<ProviderBranch[]> {
+  const { data } = await portalApi.get<ProviderBranch[]>("/service-providers/me/branches");
+  return data;
+}
+
+export async function createBranch(body: ProviderBranchWrite): Promise<ProviderBranch> {
+  const { data } = await portalApi.post<ProviderBranch>(
+    "/service-providers/me/branches",
+    body,
+  );
+  return data;
+}
+
+export async function updateBranch(
+  branchId: number,
+  body: ProviderBranchWrite,
+): Promise<ProviderBranch> {
+  const { data } = await portalApi.put<ProviderBranch>(
+    `/service-providers/me/branches/${branchId}`,
+    body,
+  );
+  return data;
+}
+
+export async function deleteBranch(branchId: number): Promise<void> {
+  await portalApi.delete(`/service-providers/me/branches/${branchId}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -167,7 +219,7 @@ export async function getCoatColors(): Promise<LookupOption[]> {
 }
 
 // ---------------------------------------------------------------------------
-// Media upload (presigned 3-step flow)
+// Media upload (presigned 3-step flow using R2)
 // ---------------------------------------------------------------------------
 
 interface UploadUrlResponse {
@@ -185,11 +237,15 @@ async function getUploadUrl(
   contentType: string,
   fileName: string,
   category: MediaCategory,
+  sizeBytes: number,
+  durationSeconds: number | null,
 ): Promise<UploadUrlResponse> {
   const { data } = await portalApi.post<UploadUrlResponse>("/media/upload-url", {
     category,
     contentType,
     fileName,
+    sizeBytes,
+    durationSeconds,
   });
   return data;
 }
@@ -203,11 +259,27 @@ export async function uploadMedia(
   file: File,
   category: MediaCategory,
 ): Promise<MediaUploadResponse> {
-  const uploadInfo = await getUploadUrl(file.type, file.name, category);
+  const isVideo = file.type.toLowerCase().startsWith("video/");
+
+  // Images are downscaled and re-encoded to JPEG before upload (videos are sent
+  // as-is). This keeps legitimate photos well under the size caps and strips EXIF.
+  const upload = isVideo ? file : await compressImage(file, category);
+  const durationSeconds = isVideo ? await probeVideoDuration(upload) : null;
+
+  const validationError = validateMediaFile(upload, category, durationSeconds);
+  if (validationError) throw new Error(validationError);
+
+  const uploadInfo = await getUploadUrl(
+    upload.type,
+    upload.name,
+    category,
+    upload.size,
+    durationSeconds,
+  );
   const putResponse = await fetch(uploadInfo.uploadUrl, {
     method: "PUT",
     headers: { "Content-Type": uploadInfo.contentType },
-    body: await file.arrayBuffer(),
+    body: await upload.arrayBuffer(),
   });
   if (!putResponse.ok) throw new Error("Upload failed");
   const confirmed = await confirmUpload(uploadInfo.assetId);
