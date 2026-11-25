@@ -22,7 +22,7 @@ export function PortalProtectedRoute({ children }: { children: React.ReactNode }
       });
   }, [isAuthenticated]);
 
-  if (!isAuthenticated) return <Navigate to={ROUTES.PORTAL_LOGIN} replace />;
+  if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
   if (loading) return null;
   if (noPage) return <Navigate to={ROUTES.PORTAL_NO_PAGE} replace />;
   return <>{children}</>;

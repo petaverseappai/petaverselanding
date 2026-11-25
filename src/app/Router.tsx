@@ -8,7 +8,7 @@ import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import PrivacyPage from "@/pages/legal/PrivacyPage";
 import TermsPage from "@/pages/legal/TermsPage";
 import CommunityGuidelinesPage from "@/pages/legal/CommunityGuidelinesPage";
-import LoginPage from "@/pages/admin/LoginPage";
+import LoginPage from "@/pages/auth/LoginPage";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import ModerationPage from "@/pages/admin/ModerationPage";
 import ModerationDetailPage from "@/pages/admin/ModerationDetailPage";
@@ -39,7 +39,6 @@ import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalProtectedRoute } from "@/components/portal/PortalProtectedRoute";
 import { PortalLayout } from "@/components/portal/PortalLayout";
-import PortalLoginPage from "@/pages/portal/LoginPage";
 import PortalNoPagePage from "@/pages/portal/NoPagePage";
 import PortalDashboardPage from "@/pages/portal/DashboardPage";
 import PortalSettingsPage from "@/pages/portal/SettingsPage";
@@ -62,7 +61,9 @@ export function AppRouter() {
         <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
         <Route path={ROUTES.TERMS} element={<TermsPage />} />
         <Route path={ROUTES.COMMUNITY_GUIDELINES} element={<CommunityGuidelinesPage />} />
-        <Route path={ROUTES.ADMIN_LOGIN} element={<LoginPage />} />
+        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+        <Route path={ROUTES.ADMIN_LOGIN} element={<Navigate to={ROUTES.LOGIN} replace />} />
+        <Route path={ROUTES.PORTAL_LOGIN} element={<Navigate to={ROUTES.LOGIN} replace />} />
         <Route
           element={
             <ProtectedRoute>
@@ -97,7 +98,6 @@ export function AppRouter() {
           <Route path={ROUTES.ADMIN_VISION_PROFILES} element={<VisionProfilesPage />} />
           <Route path={ROUTES.ADMIN_VISION_PROFILE_DETAIL} element={<VisionProfileDetailPage />} />
         </Route>
-        <Route path={ROUTES.PORTAL_LOGIN} element={<PortalLoginPage />} />
         <Route path={ROUTES.PORTAL_NO_PAGE} element={<PortalNoPagePage />} />
         <Route
           element={

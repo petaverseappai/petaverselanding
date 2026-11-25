@@ -132,7 +132,7 @@ export function SharePostCard({ post, id }: SharePostCardProps) {
           </div>
 
           <a
-            href="/admin/login"
+            href="/login"
             className="block w-full py-3 px-4 text-gray-700 text-center rounded-lg hover:bg-gray-100 transition font-medium border border-gray-300"
           >
             Sign in to view on web

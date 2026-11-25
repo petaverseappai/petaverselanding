@@ -85,13 +85,9 @@ export type {
 // Auth (§2)
 // ---------------------------------------------------------------------------
 
-export async function adminLogin(email: string, password: string): Promise<AuthResponse> {
-  const { data } = await api.post<AuthResponse>("/auth/admin-login", { email, password });
-  return data;
-}
-
-export async function providerLogin(email: string, password: string): Promise<AuthResponse> {
-  const { data } = await api.post<AuthResponse>("/auth/provider-login", { email, password });
+/** Shared web login: succeeds for Admin or ServiceProvider accounts; route by the returned roles. */
+export async function portalLogin(email: string, password: string): Promise<AuthResponse> {
+  const { data } = await api.post<AuthResponse>("/auth/portal-login", { email, password });
   return data;
 }
 

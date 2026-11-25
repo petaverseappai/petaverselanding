@@ -7,7 +7,10 @@ export const ROUTES = {
   TERMS: "/terms",
   COMMUNITY_GUIDELINES: "/community-guidelines",
 
+  LOGIN: "/login",
+
   ADMIN: "/admin",
+  // Old login URLs — kept only so existing links redirect to LOGIN.
   ADMIN_LOGIN: "/admin/login",
 
   PORTAL: "/portal",

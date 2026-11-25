@@ -22,11 +22,13 @@ api.interceptors.response.use(
   async (error) => {
     const original = error.config;
 
-    // Only attempt refresh on 401, and not if this is already a retry or a
-    // refresh/revoke request itself (avoid infinite loops).
+    // Only attempt refresh on 401, and not if this is already a retry, a login
+    // (a 401 there means wrong credentials), or a refresh/revoke request itself
+    // (avoid infinite loops).
     if (
       error.response?.status !== 401 ||
       original._retried ||
+      original.url?.includes("-login") ||
       original.url?.includes("/auth/refresh") ||
       original.url?.includes("/auth/revoke")
     ) {
@@ -48,7 +50,7 @@ api.interceptors.response.use(
           tokenStore.set(data.accessToken);
         } catch {
           tokenStore.clear();
-          window.location.href = "/admin/login";
+          window.location.href = "/login";
         }
       })().finally(() => {
         refreshing = null;

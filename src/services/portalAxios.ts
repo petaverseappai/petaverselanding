@@ -22,6 +22,7 @@ portalApi.interceptors.response.use(
     if (
       error.response?.status !== 401 ||
       original._retried ||
+      original.url?.includes("-login") ||
       original.url?.includes("/auth/refresh") ||
       original.url?.includes("/auth/revoke")
     ) {
@@ -41,7 +42,7 @@ portalApi.interceptors.response.use(
           portalTokenStore.set(data.accessToken);
         } catch {
           portalTokenStore.clear();
-          window.location.href = "/portal/login";
+          window.location.href = "/login";
         }
       })().finally(() => {
         refreshing = null;

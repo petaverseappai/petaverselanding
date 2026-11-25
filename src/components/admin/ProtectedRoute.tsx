@@ -4,6 +4,6 @@ import { ROUTES } from "@/constants/routes";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) return <Navigate to={ROUTES.ADMIN_LOGIN} replace />;
+  if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
   return <>{children}</>;
 }
