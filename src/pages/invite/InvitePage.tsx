@@ -123,9 +123,54 @@ export default function InvitePage() {
           Open the PetaVerse app to accept and start co-owning {invite!.petName}.
         </p>
 
+        <OpenInAppButton token={token!} />
+
+        <div className="my-6 flex items-center gap-3">
+          <div className="h-px flex-1 bg-gray-100" />
+          <span className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            or get the app
+          </span>
+          <div className="h-px flex-1 bg-gray-100" />
+        </div>
+
         <DownloadButtons token={token!} />
       </div>
     </div>
+  );
+}
+
+function OpenInAppButton({ token }: { token: string }) {
+  const openInApp = () => {
+    const deepLink = `petaverse://invite?token=${encodeURIComponent(token)}`;
+
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const storeFallback = isAndroid
+      ? `https://play.google.com/store/apps/details?id=com.petaverse.app&referrer=${encodeURIComponent(`invite_token=${token}`)}`
+      : `https://apps.apple.com/app/petaverse/id0000000000?pt=invite&ct=${encodeURIComponent(token)}`;
+
+    // If the app opens, the page is backgrounded and this timeout never fires.
+    const fallbackTimer = window.setTimeout(() => {
+      window.location.href = storeFallback;
+    }, 1500);
+
+    const cancelFallback = () => {
+      if (document.visibilityState === "hidden") {
+        window.clearTimeout(fallbackTimer);
+      }
+    };
+    document.addEventListener("visibilitychange", cancelFallback, { once: true });
+
+    window.location.href = deepLink;
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={openInApp}
+      className="w-full rounded-full bg-[#F2A154] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#e0924a]"
+    >
+      Open in PetaVerse
+    </button>
   );
 }
 
